@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SHUV</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      background: #000;
+      color: #f0e6c8;
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+    .particulas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+    .particula {
+      position: absolute;
+      width: 2px; height: 2px;
+      background: #c9a84c;
+      border-radius: 50%;
+      animation: caer linear infinite;
+      opacity: 0;
+    }
+    @keyframes caer {
+      0%   { opacity: 0; transform: translateY(-10px); }
+      10%  { opacity: 0.8; }
+      90%  { opacity: 0.4; }
+      100% { opacity: 0; transform: translateY(100vh); }
+    }
+    .pantalla {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      width: 100%;
+      padding: 40px 30px;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .pantalla.visible { opacity: 1; transform: translateY(0); }
+    .pantalla.saliendo { opacity: 0; transform: translateY(-20px); }
+    .simbolo {
+      font-size: 48px;
+      color: #c9a84c;
+      margin-bottom: 16px;
+      letter-spacing: 8px;
+      text-shadow: 0 0 30px rgba(201,168,76,0.6);
+      animation: pulsar 3s ease-in-out infinite;
+    }
+    @keyframes pulsar {
+      0%, 100% { text-shadow: 0 0 20px rgba(201,168,76,0.4); }
+      50%       { text-shadow: 0 0 50px rgba(201,168,76,0.9), 0 0 80px rgba(201,168,76,0.3); }
+    }
+    .hebreo {
+      font-size: 36px;
+      color: #c9a84c;
+      margin-bottom: 40px;
+      letter-spacing: 4px;
+      opacity: 0.7;
+    }
+    .titulo {
+      font-size: 13px;
+      letter-spacing: 6px;
+      text-transform: uppercase;
+      color: #c9a84c;
+      margin-bottom: 50px;
+      opacity: 0.9;
+    }
+    .narrativa {
+      font-size: 18px;
+      line-height: 1.9;
+      color: #e8dcc0;
+      max-width: 320px;
+      margin-bottom: 50px;
+      font-style: italic;
+    }
+    .narrativa em { color: #c9a84c; font-style: normal; }
+    .versiculo {
+      font-size: 15px;
+      line-height: 1.8;
+      color: #a89060;
+      max-width: 300px;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+    .referencia {
+      font-size: 12px;
+      letter-spacing: 3px;
+      color: #c9a84c;
+      opacity: 0.7;
+      margin-bottom: 50px;
+      text-transform: uppercase;
+    }
+    .botones {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      width: 100%;
+      max-width: 300px;
+    }
+    .btn {
+      background: transparent;
+      border: 1px solid rgba(201,168,76,0.4);
+      color: #e8dcc0;
+      padding: 16px 24px;
+      font-size: 15px;
+      font-family: 'Georgia', serif;
+      border-radius: 2px;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn:hover, .btn:active {
+      background: rgba(201,168,76,0.1);
+      border-color: rgba(201,168,76,0.9);
+      color: #c9a84c;
+    }
+    .btn::after {
+      content: '';
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 0; height: 0;
+      background: rgba(201,168,76,0.2);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      transition: width 0.4s, height 0.4s;
+    }
+    .btn:active::after { width: 300px; height: 300px; }
+    .btn.dorado {
+      background: rgba(201,168,76,0.15);
+      border-color: #c9a84c;
+      color: #c9a84c;
+    }
+    .linea {
+      width: 40px; height: 1px;
+      background: rgba(201,168,76,0.3);
+      margin: 30px auto;
+    }
+    .puntos {
+      font-size: 28px;
+      color: #c9a84c;
+      letter-spacing: 8px;
+      margin-bottom: 30px;
+      animation: aparecer 2s ease-in-out infinite;
+    }
+    @keyframes aparecer {
+      0%, 100% { opacity: 0.2; }
+      50% { opacity: 1; }
+    }
+    .perfil-card {
+      background: rgba(201,168,76,0.05);
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 4px;
+      padding: 24px;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 30px;
+    }
+    .perfil-nombre { font-size: 20px; color: #c9a84c; margin-bottom: 6px; }
+    .perfil-nivel {
+      font-size: 12px; letter-spacing: 3px;
+      color: #a89060; text-transform: uppercase; margin-bottom: 20px;
+    }
+    .stat {
+      display: flex; justify-content: space-between;
+      font-size: 13px; color: #a89060;
+      margin-bottom: 8px; padding-bottom: 8px;
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+    .stat span:last-child { color: #e8dcc0; }
+    .inventario-items { font-size: 24px; letter-spacing: 6px; margin-top: 16px; text-align: center; }
+  </style>
+</head>
+<body>
+
+<div class="particulas" id="particulas"></div>
+
+<!-- P1: ENTRADA -->
+<div class="pantalla visible" id="p-inicio">
+  <div class="simbolo">✦</div>
+  <div class="titulo">S H U V</div>
+  <div class="hebreo">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
+  <div class="narrativa">
+    Algo te trajo hasta aquí.<br>
+    No sabemos qué.<br>
+    <em>Tú tampoco.</em>
+  </div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-espejo','si')">Sí</button>
+    <button class="btn" onclick="irA('p-espejo','nose')">No sé</button>
+    <button class="btn" onclick="irA('p-espejo','curiosidad')">Por curiosidad</button>
+  </div>
+</div>
+
+<!-- P2: ESPEJO -->
+<div class="pantalla" id="p-espejo">
+  <div class="simbolo">✦</div>
+  <div class="narrativa">
+    Antes de seguir.<br><br>
+    ¿Cuándo fue la última vez<br>
+    que algo te dejó<br>
+    <em>sin palabras?</em>
+  </div>
+  <div class="botones">
+    <button class="btn" onclick="irA('p-camino','lejos')">Hace mucho</button>
+    <button class="btn" onclick="irA('p-camino','ayer')">Ayer</button>
+    <button class="btn" onclick="irA('p-camino','nunca')">Nunca me ha pasado</button>
+    <button class="btn dorado" onclick="irA('p-camino','ahora')">Ahora mismo</button>
+  </div>
+</div>
+
+<!-- P3: CAMINO -->
+<div class="pantalla" id="p-camino">
+  <div class="simbolo">✦</div>
+  <div class="narrativa">¿Cómo llegas hoy?</div>
+  <div class="botones">
+    <button class="btn" onclick="elegirCamino('cansado')">Cansado</button>
+    <button class="btn" onclick="elegirCamino('dudas')">Con dudas</button>
+    <button class="btn" onclick="elegirCamino('buscando')">Buscando algo</button>
+    <button class="btn" onclick="elegirCamino('sinsaber')">Sin saber por qué estoy aquí</button>
+  </div>
+</div>
+
+<!-- P4: PALABRA DEL CAMINO -->
+<div class="pantalla" id="p-palabra">
+  <div class="simbolo">✦</div>
+  <div class="narrativa" id="txt-palabra"></div>
+  <div class="linea"></div>
+  <div class="versiculo" id="txt-versiculo"></div>
+  <div class="referencia" id="txt-referencia"></div>
+  <div class="botones" id="btn-palabra"></div>
+</div>
+
+<!-- P5: PROFUNDIDAD DEL CAMINO -->
+<div class="pantalla" id="p-profundidad">
+  <div class="simbolo">✦</div>
+  <div class="narrativa" id="txt-profundidad"></div>
+  <div class="botones" id="btn-profundidad"></div>
+</div>
+
+<!-- P6: CONSECUENCIA -->
+<div class="pantalla" id="p-consecuencia">
+  <div class="simbolo">✦</div>
+  <div class="narrativa" id="txt-consecuencia"></div>
+  <div class="linea"></div>
+  <div class="versiculo" id="txt-cons-ver"></div>
+  <div class="referencia" id="txt-cons-ref"></div>
+  <div class="botones" id="btn-consecuencia"></div>
+</div>
+
+<!-- P7: DILEMA -->
+<div class="pantalla" id="p-dilema">
+  <div class="simbolo">✦</div>
+  <div class="narrativa" id="txt-dilema"></div>
+  <div class="botones" id="btn-dilema"></div>
+</div>
+
+<!-- P8: MOMENTO OSCURO -->
+<div class="pantalla" id="p-oscuro">
+  <div class="simbolo" style="color:#555; text-shadow:none;">✦</div>
+  <div class="narrativa" style="color:#888;">
+    Una voz dice:<br><br>
+    <em style="color:#666;">"No eres suficiente.<br>
+    Nunca lo serás.<br>
+    Nadie te espera."</em>
+  </div>
+  <div class="botones" id="btn-oscuro"></div>
+</div>
+
+<!-- P9: GRIETA -->
+<div class="pantalla" id="p-grieta">
+  <div class="puntos">· · ·</div>
+  <div class="narrativa" style="font-size:22px; line-height:2.4;">
+    Hay alguien<br>
+    que <em>lo sabe.</em>
+  </div>
+  <div class="botones" style="margin-top:20px;">
+    <button class="btn dorado" onclick="irA('p-revelacion')">¿Quién?</button>
+  </div>
+</div>
+
+<!-- P10: REVELACIÓN -->
+<div class="pantalla" id="p-revelacion">
+  <div class="simbolo">✦</div>
+  <div class="narrativa">
+    No llegaste por algoritmo.<br>
+    No llegaste por casualidad.<br><br>
+    <em>Fuiste llamado por tu nombre.</em>
+  </div>
+  <div class="linea"></div>
+  <div class="versiculo">He aquí, yo estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré.</div>
+  <div class="referencia">Apocalipsis 3:20</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-escucha')">Escucho</button>
+    <button class="btn" onclick="irA('p-noentiendo')">No entiendo</button>
+  </div>
+</div>
+
+<!-- P11: NO ENTIENDO -->
+<div class="pantalla" id="p-noentiendo">
+  <div class="simbolo">✦</div>
+  <div class="narrativa">No tienes que entender.<br><em>Solo tienes que escuchar.</em></div>
+  <div class="linea"></div>
+  <div class="versiculo">Tras el fuego, una voz apacible y delicada.</div>
+  <div class="referencia">1 Reyes 19:12</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-escucha')">Escucho</button>
+  </div>
+</div>
+
+<!-- P12: ESCUCHA -->
+<div class="pantalla" id="p-escucha">
+  <div class="simbolo" style="font-size:60px;">&#x1F32C;</div>
+  <div class="narrativa">
+    Algo sopla dentro de ti.<br>
+    No lo empujaste.<br>
+    No lo fabricaste.<br>
+    <em>Llegó.</em>
+  </div>
+  <div class="linea"></div>
+  <div class="versiculo">Mis ovejas oyen mi voz, y yo las conozco, y me siguen.</div>
+  <div class="referencia">Juan 10:27</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="abrirme()">Me abro</button>
+    <button class="btn" onclick="irA('p-miedo')">Me da miedo abrirme</button>
+    <button class="btn" onclick="irA('p-esperar')">Espero un poco más</button>
+  </div>
+</div>
+
+<!-- P13: MIEDO -->
+<div class="pantalla" id="p-miedo">
+  <div class="simbolo">✦</div>
+  <div class="narrativa">El miedo no te expulsa.<br><em>También es bienvenido aquí.</em></div>
+  <div class="linea"></div>
+  <div class="versiculo">No temas, porque yo estoy contigo. No desmayes, porque yo soy tu Dios.</div>
+  <div class="referencia">Isaías 41:10</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="abrirme()">Me abro</button>
+  </div>
+</div>
+
+<!-- P14: ESPERAR -->
+<div class="pantalla" id="p-esperar">
+  <div class="simbolo">&#x23F3;</div>
+  <div class="narrativa">Esperaste.<br><em>Eso también es fe.</em></div>
+  <div class="linea"></div>
+  <div class="versiculo">Los que esperan en el Señor renovarán sus fuerzas. Correrán, y no se cansarán.</div>
+  <div class="referencia">Isaías 40:31</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="abrirme()">Ya estoy listo</button>
+  </div>
+</div>
+
+<!-- P15: SILENCIO ANTES DE CASA -->
+<div class="pantalla" id="p-silencio-final">
+  <div class="puntos">· · ·</div>
+  <div class="narrativa" style="font-size:16px; color:#a89060;">
+    El Señor tu Dios está en medio de ti.<br><br>
+    <em>Te callará con su amor.</em>
+  </div>
+  <div class="referencia" style="margin-top:0;">Sofonías 3:17</div>
+  <div class="botones" style="margin-top:40px;">
+    <button class="btn dorado" onclick="irA('p-regreso')">· · ·</button>
+  </div>
+</div>
+
+<!-- P16: REGRESO / SHUV -->
+<div class="pantalla" id="p-regreso">
+  <div class="simbolo" style="font-size:56px;">&#x1F3E0;</div>
+  <div class="narrativa">No ganaste una batalla.<br><em>Regresaste a casa.</em></div>
+  <div class="linea"></div>
+  <div class="versiculo" id="txt-regreso">Yo he venido para que tengan vida, y para que la tengan en abundancia.</div>
+  <div class="referencia" id="ref-regreso">Juan 10:10</div>
+  <div class="hebreo" style="margin-top:30px; margin-bottom:30px;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-inicio')">&#x1F3E0; Volver al inicio</button>
+    <button class="btn" onclick="mostrarPerfil()">&#x1F464; Mi perfil</button>
+  </div>
+</div>
+
+<!-- P17: PERFIL -->
+<div class="pantalla" id="p-perfil">
+  <div class="simbolo">&#x1F464;</div>
+  <div class="perfil-card">
+    <div class="perfil-nombre" id="perfil-nombre">—</div>
+    <div class="perfil-nivel" id="perfil-nivel">Buscador</div>
+    <div class="stat"><span>✦ Fruto</span><span id="p-puntos">0 pts</span></div>
+    <div class="stat"><span>&#x1F3E0; Regresos</span><span id="p-regresos">0</span></div>
+    <div class="stat"><span>&#x1F441; Escuchas</span><span id="p-escuchas">0</span></div>
+    <div class="stat"><span>&#x1F511; Discernimientos</span><span id="p-discernidos">0</span></div>
+    <div class="inventario-items" id="p-inventario"></div>
+  </div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-inicio')">← Volver</button>
+  </div>
+</div>
+
+<script>
+  const tg = window.Telegram.WebApp;
+  tg.ready();
+  tg.expand();
+  tg.setHeaderColor && tg.setHeaderColor('#000000');
+  tg.setBackgroundColor && tg.setBackgroundColor('#000000');
+
+  const estado = {
+    camino: '',
+    puntos: 0,
+    regresos: 0,
+    escuchas: 0,
+    discernidos: 0,
+    inventario: [],
+    nombre: (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.first_name : 'Caminante',
+  };
+
+  // Partículas
+  const cont = document.getElementById('particulas');
+  for (let i = 0; i < 40; i++) {
+    const p = document.createElement('div');
+    p.className = 'particula';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.animationDuration = (6 + Math.random() * 10) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
+    cont.appendChild(p);
+  }
+
+  // Navegación
+  function irA(id, dato) {
+    const actual = document.querySelector('.pantalla.visible');
+    if (actual) {
+      actual.classList.add('saliendo');
+      setTimeout(() => {
+        actual.classList.remove('visible', 'saliendo');
+        const sig = document.getElementById(id);
+        if (sig) { sig.classList.add('visible'); window.scrollTo(0,0); }
+      }, 400);
+    }
+    if (dato) estado.ultimo = dato;
+  }
+
+  const CAMINOS = {
+    cansado: {
+      txt: 'Llegas cargado.<br>No te pedimos que corras.<br><em>Solo que te sientes.</em>',
+      ver: 'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.',
+      ref: 'Mateo 11:28',
+      prof_txt: 'Algo dentro de ti sigue corriendo.<br><br>¿De qué huyes?',
+      prof_btns: [
+        { txt: 'Del silencio', sig: 'cons_silencio' },
+        { txt: 'De mí mismo', sig: 'cons_yo' },
+        { txt: 'De algo que pasó', sig: 'cons_pasado' },
+        { txt: 'No huyo. Estoy agotado.', sig: 'cons_agotado' },
+      ]
+    },
+    dudas: {
+      txt: 'Las dudas no te hacen débil.<br><em>Te hacen honesto.</em>',
+      ver: 'No seas incrédulo, sino creyente.',
+      ref: 'Juan 20:27',
+      prof_txt: '¿Qué pasaría si lo que buscas<br><br><em>ya te estaba buscando a ti?</em>',
+      prof_btns: [
+        { txt: 'Eso no tiene sentido', sig: 'cons_no' },
+        { txt: 'Me gustaría que fuera verdad', sig: 'cons_si' },
+        { txt: 'Algo me dice que sí', sig: 'cons_si' },
+        { txt: 'No lo sé', sig: 'cons_no' },
+      ]
+    },
+    buscando: {
+      txt: 'Buscas.<br><em>Eso ya dice mucho.</em>',
+      ver: 'Me buscaréis y me hallaréis, cuando me busquéis de todo vuestro corazón.',
+      ref: 'Jeremías 29:13',
+      prof_txt: 'Si encontraras lo que buscas esta noche...<br><br><em>¿Estarías listo para recibirlo?</em>',
+      prof_btns: [
+        { txt: 'Sí, estoy listo', sig: 'cons_si' },
+        { txt: 'Tengo miedo de estarlo', sig: 'cons_miedo' },
+        { txt: 'No lo sé', sig: 'cons_no' },
+      ]
+    },
+    sinsaber: {
+      txt: 'No saber<br><em>también es una puerta.</em>',
+      ver: 'Señor, tú me has examinado y conocido. Sabes cuándo me siento y cuándo me levanto.',
+      ref: 'Salmo 139:1',
+      prof_txt: 'Algo te trajo hasta aquí<br>sin que lo planeases.<br><br><em>¿Y si eso no fue casualidad?</em>',
+      prof_btns: [
+        { txt: 'Puede ser coincidencia', sig: 'cons_no' },
+        { txt: 'Nunca lo había pensado', sig: 'cons_si' },
+        { txt: 'Yo tampoco lo entiendo', sig: 'cons_si' },
+      ]
+    },
+  };
+
+  const CONSECUENCIAS = {
+    cons_silencio: { txt: 'El silencio te asusta.<br><br>Porque en el silencio<br><em>algo podría hablarte.</em>', ver: 'Estad quietos, y conoced que yo soy Dios.', ref: 'Salmo 46:10' },
+    cons_yo:       { txt: 'Huyes de ti mismo.<br><br>Pero <em>tú mismo</em><br>es exactamente lo que el Padre quiere encontrar.', ver: 'Cercano está el Señor a los quebrantados de corazón.', ref: 'Salmo 34:18' },
+    cons_pasado:   { txt: 'Hay algo detrás de ti<br>que sientes que te define.<br><br><em>Pero tú no eres lo que pasó.</em>', ver: 'Cuando pases por las aguas, yo estaré contigo. Los ríos no te anegarán.', ref: 'Isaías 43:2' },
+    cons_agotado:  { txt: 'Llegas vacío.<br><br><em>Bien.</em><br>Los vasos vacíos<br>son los únicos que se pueden llenar.', ver: 'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.', ref: 'Mateo 11:28' },
+    cons_si:       { txt: 'Algo en ti lo sabe.<br><br>Antes de que tu mente<br><em>tuviera palabras para decirlo.</em>', ver: 'Antes de formarte en el vientre te conocí.', ref: 'Jeremías 1:5' },
+    cons_no:       { txt: 'No entender<br>no es un obstáculo.<br><br><em>Es el punto de partida.</em>', ver: 'Fíate del Señor de todo tu corazón, y no te apoyes en tu propia prudencia.', ref: 'Proverbios 3:5' },
+    cons_miedo:    { txt: 'El miedo que sientes<br>no es debilidad.<br><br><em>Es la puerta temblando<br>antes de abrirse.</em>', ver: 'No temas, porque yo estoy contigo. No desmayes, porque yo soy tu Dios.', ref: 'Isaías 41:10' },
+  };
+
+  function elegirCamino(c) {
+    estado.camino = c;
+    estado.puntos += 2;
+    const d = CAMINOS[c];
+    document.getElementById('txt-palabra').innerHTML = d.txt;
+    document.getElementById('txt-versiculo').textContent = d.ver;
+    document.getElementById('txt-referencia').textContent = d.ref;
+    document.getElementById('btn-palabra').innerHTML =
+      '<button class="btn dorado" onclick="mostrarProfundidad()">Seguir →</button>';
+    irA('p-palabra');
+  }
+
+  function mostrarProfundidad() {
+    const d = CAMINOS[estado.camino];
+    document.getElementById('txt-profundidad').innerHTML = d.prof_txt;
+    let btns = '';
+    d.prof_btns.forEach(b => {
+      btns += `<button class="btn" onclick="mostrarConsecuencia('${b.sig}')">${b.txt}</button>`;
+    });
+    document.getElementById('btn-profundidad').innerHTML = btns;
+    irA('p-profundidad');
+  }
+
+  function mostrarConsecuencia(clave) {
+    estado.puntos += 2;
+    if (!estado.inventario.includes('🗝')) estado.inventario.push('🗝');
+    const c = CONSECUENCIAS[clave];
+    document.getElementById('txt-consecuencia').innerHTML = c.txt;
+    document.getElementById('txt-cons-ver').textContent = c.ver;
+    document.getElementById('txt-cons-ref').textContent = c.ref;
+    document.getElementById('btn-consecuencia').innerHTML =
+      '<button class="btn dorado" onclick="mostrarDilema()">Seguir →</button>';
+    irA('p-consecuencia');
+  }
+
+  function mostrarDilema() {
+    const c = estado.camino;
+    let txt = '';
+    let btns = '';
+    if (c === 'cansado') {
+      txt = 'Hay una decisión delante de ti.<br><br>Ser honesto con alguien<br>y perder algo que aprecias.<br><br>O callar<br>y conservarlo.<br><br><em>¿Qué haces?</em>';
+      btns = `
+        <button class="btn dorado" onclick="irOscuro(true)">Soy honesto aunque duela</button>
+        <button class="btn" onclick="irOscuro(false)">Callo. No es el momento</button>
+        <button class="btn" onclick="irOscuro(false)">No sé qué haría</button>`;
+    } else if (c === 'dudas') {
+      txt = 'Si pudieras eliminar todas tus dudas ahora mismo...<br><br><em>¿Las eliminarías?</em>';
+      btns = `
+        <button class="btn dorado" onclick="irOscuro(true)">Sí, sin dudar</button>
+        <button class="btn" onclick="irOscuro(false)">No estoy seguro</button>
+        <button class="btn" onclick="irOscuro(true)">No. Las dudas me hacen humano</button>`;
+    } else if (c === 'buscando') {
+      txt = 'Lo que buscas...<br><br><em>¿Estás dispuesto a cambiar</em><br>para poder recibirlo?';
+      btns = `
+        <button class="btn dorado" onclick="irOscuro(true)">Sí, lo que haga falta</button>
+        <button class="btn" onclick="irOscuro(false)">No sé si puedo cambiar</button>
+        <button class="btn" onclick="irOscuro(false)">Tengo miedo de lo que implica</button>`;
+    } else {
+      txt = 'Estás aquí sin saber por qué.<br><br>Pero si hubiera una razón...<br><br><em>¿Querrías saberla?</em>';
+      btns = `
+        <button class="btn dorado" onclick="irOscuro(true)">Sí, quiero saber</button>
+        <button class="btn" onclick="irOscuro(false)">No sé si estoy listo</button>
+        <button class="btn" onclick="irOscuro(true)">Depende de la razón</button>`;
+    }
+    document.getElementById('txt-dilema').innerHTML = txt;
+    document.getElementById('btn-dilema').innerHTML = btns;
+    irA('p-dilema');
+  }
+
+  function irOscuro(profundo) {
+    estado.discernidos++;
+    estado.puntos += 3;
+    if (!estado.inventario.includes('🛡')) estado.inventario.push('🛡');
+    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+    let btns = '';
+    if (profundo) {
+      btns = '<button class="btn dorado" onclick="irA(\'p-grieta\')">Esa voz miente</button><button class="btn" onclick="irA(\'p-grieta\')">... lo sé pero duele</button>';
+    } else {
+      btns = '<button class="btn" onclick="irA(\'p-grieta\')">Sigo de todas formas</button><button class="btn" onclick="irA(\'p-grieta\')">No puedo ignorarla</button>';
+    }
+    document.getElementById('btn-oscuro').innerHTML = btns;
+    irA('p-oscuro');
+  }
+
+  function abrirme() {
+    estado.escuchas++;
+    if (!estado.inventario.includes('🌬')) estado.inventario.push('🌬');
+    irA('p-silencio-final');
+  }
+
+  const PALABRAS_REGRESO = [
+    { v: 'Yo he venido para que tengan vida, y para que la tengan en abundancia.', r: 'Juan 10:10' },
+    { v: 'Cuando aún estaba lejos, su padre lo vio y se compadeció. Corrió y lo abrazó.', r: 'Lucas 15:20' },
+    { v: 'Hay más gozo en el cielo por un pecador que se arrepiente.', r: 'Lucas 15:7' },
+    { v: 'Bien, buen siervo y fiel. Sobre mucho te pondré.', r: 'Mateo 25:21' },
+    { v: 'La paz os dejo, mi paz os doy. No se turbe vuestro corazón.', r: 'Juan 14:27' },
+    { v: 'El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente.', r: 'Salmo 91:1' },
+  ];
+
+  // Override llegada a p-regreso
+  document.getElementById('p-silencio-final').querySelector('button').onclick = function() {
+    estado.regresos++;
+    estado.puntos += 6;
+    if (!estado.inventario.includes('🔥')) estado.inventario.push('🔥');
+    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    const idx = Math.min(estado.regresos - 1, PALABRAS_REGRESO.length - 1);
+    document.getElementById('txt-regreso').textContent = PALABRAS_REGRESO[idx].v;
+    document.getElementById('ref-regreso').textContent = PALABRAS_REGRESO[idx].r;
+    irA('p-regreso');
+  };
+
+  function mostrarPerfil() {
+    const niveles = [[0,'🌑 Buscador'],[10,'🌱 Caminante'],[25,'🛡 Guardián'],[50,'⚡ Anciano'],[80,'🔥 Profeta']];
+    let nv = '🌑 Buscador';
+    for (const [min, label] of niveles) { if (estado.puntos >= min) nv = label; }
+    document.getElementById('perfil-nombre').textContent = estado.nombre;
+    document.getElementById('perfil-nivel').textContent = nv;
+    document.getElementById('p-puntos').textContent = estado.puntos + ' pts';
+    document.getElementById('p-regresos').textContent = estado.regresos;
+    document.getElementById('p-escuchas').textContent = estado.escuchas;
+    document.getElementById('p-discernidos').textContent = estado.discernidos;
+    document.getElementById('p-inventario').textContent = estado.inventario.join('  ') || '—';
+    irA('p-perfil');
+  }
+</script>
+</body>
+</html>
