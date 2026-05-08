@@ -126,6 +126,22 @@
       margin-bottom: 50px;
       text-transform: uppercase;
     }
+    .hebreo-pequeno {
+      font-size: 22px;
+      color: #c9a84c;
+      letter-spacing: 4px;
+      opacity: 0.6;
+      margin-bottom: 8px;
+      direction: rtl;
+    }
+    .raiz {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: #a89060;
+      text-transform: uppercase;
+      margin-bottom: 30px;
+      opacity: 0.7;
+    }
     .botones {
       display: flex;
       flex-direction: column;
@@ -170,6 +186,12 @@
       color: #c9a84c;
       backdrop-filter: blur(4px);
     }
+    .btn.fuego {
+      background: rgba(180,60,20,0.25);
+      border-color: rgba(220,100,30,0.8);
+      color: #f0c090;
+      backdrop-filter: blur(4px);
+    }
     .linea {
       width: 40px; height: 1px;
       background: rgba(201,168,76,0.3);
@@ -186,6 +208,40 @@
       0%, 100% { opacity: 0.2; }
       50% { opacity: 1; }
     }
+    .llamarada {
+      font-size: 56px;
+      margin-bottom: 20px;
+      animation: llamear 2s ease-in-out infinite;
+    }
+    @keyframes llamear {
+      0%, 100% { transform: scale(1); filter: brightness(1); }
+      50% { transform: scale(1.15); filter: brightness(1.4); }
+    }
+    .mision-card {
+      background: rgba(0,0,0,0.65);
+      border: 1px solid rgba(201,168,76,0.35);
+      border-radius: 4px;
+      padding: 20px 18px;
+      width: 100%;
+      max-width: 300px;
+      margin-bottom: 28px;
+      backdrop-filter: blur(8px);
+    }
+    .mision-titulo {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: #c9a84c;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      opacity: 0.8;
+    }
+    .mision-texto {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #e8dcc0;
+      font-style: italic;
+    }
+    .mision-texto em { color: #c9a84c; font-style: normal; }
     .perfil-card {
       background: rgba(0,0,0,0.6);
       border: 1px solid rgba(201,168,76,0.2);
@@ -213,7 +269,6 @@
 </head>
 <body>
 
-<!-- Fondo dinámico -->
 <div class="bg-global" id="bg-global"></div>
 <div class="bg-overlay"></div>
 <div class="particulas" id="particulas"></div>
@@ -412,16 +467,195 @@
   <div class="simbolo" style="font-size:56px;">&#x1F3E0;</div>
   <div class="narrativa">No ganaste una batalla.<br><em>Regresaste a casa.</em></div>
   <div class="linea"></div>
-  <div class="versiculo" id="txt-regreso">Yo he venido para que tengan vida, y para que la tengan en abundancia.</div>
-  <div class="referencia" id="ref-regreso">Juan 10:10</div>
+  <div class="versiculo" id="txt-regreso"></div>
+  <div class="referencia" id="ref-regreso"></div>
   <div class="hebreo" style="margin-top:30px; margin-bottom:30px;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-derramamiento')">&#x1F525; Seguir</button>
+    <button class="btn" onclick="mostrarPerfil()">&#x1F464; Mi perfil</button>
+  </div>
+</div>
+
+<!-- P17: DERRAMAMIENTO — Joel 3:1 —
+     אֶשְׁפּוֹךְ אֶת־רוּחִי — Derramaré Mi Espíritu -->
+<div class="pantalla" id="p-derramamiento">
+  <div class="llamarada">&#x1F525;</div>
+  <div class="hebreo-pequeno">&#x05D0;&#x05B6;&#x05E9;&#x05B0;&#x05E4;&#x05BC;&#x05D5;&#x05B9;&#x05DA; &#x05D0;&#x05B6;&#x05EA;&#x05BE;&#x05E8;&#x05D5;&#x05BC;&#x05D7;&#x05B4;&#x05D9;</div>
+  <div class="raiz">Joel 3:1 — Eshjpokh et-Rují</div>
+  <div class="narrativa">
+    Volviste.<br><br>
+    Y ahora el Padre<br>
+    cumple Su palabra:<br><br>
+    <em>"Derramaré Mi Espíritu<br>sobre toda carne."</em>
+  </div>
+  <div class="linea"></div>
+  <div class="versiculo">Vuestros hijos e hijas profetizarán. Vuestros ancianos soñarán sueños. Vuestros jóvenes verán visiones.</div>
+  <div class="referencia">Joel 3:1</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-ruaj')">Siento algo</button>
+    <button class="btn" onclick="irA('p-ruaj')">No siento nada</button>
+    <button class="btn" onclick="irA('p-ruaj')">Tengo miedo de sentirlo</button>
+  </div>
+</div>
+
+<!-- P18: EL RÚAJ — La raíz del Espíritu -->
+<div class="pantalla" id="p-ruaj">
+  <div class="simbolo">&#x1F32C;</div>
+  <div class="hebreo-pequeno">&#x05E8;&#x05D5;&#x05BC;&#x05D7;</div>
+  <div class="raiz">Rúaj — H7307 — Viento / Espíritu / Aliento</div>
+  <div class="narrativa">
+    La misma palabra.<br>
+    <em>Viento.</em> <em>Espíritu.</em> <em>Aliento.</em><br><br>
+    El que sopló sobre las aguas<br>en el principio —<br><br>
+    <em>sopla ahora sobre ti.</em>
+  </div>
+  <div class="linea"></div>
+  <div class="versiculo">Y también sobre los siervos y las siervas derramaré Mi Espíritu en aquellos días.</div>
+  <div class="referencia">Joel 3:2</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-senales')">Continúo</button>
+  </div>
+</div>
+
+<!-- P19: SEÑALES EN EL CIELO — Joel 3:3-4 -->
+<div class="pantalla" id="p-senales">
+  <div class="simbolo">&#x1F31E;</div>
+  <div class="narrativa">
+    Antes del Día Grande<br>
+    hay señales:<br><br>
+    <em>El sol se oscurece.<br>
+    La luna se vuelve sangre.</em><br><br>
+    ¿Las ves ya?<br>
+    <em>En el mundo que te rodea.</em>
+  </div>
+  <div class="linea"></div>
+  <div class="versiculo">El sol se convertirá en oscuridad, y la luna en sangre, antes que venga el día grande y espantoso de YHWH.</div>
+  <div class="referencia">Joel 3:4</div>
+  <div class="botones">
+    <button class="btn" onclick="irA('p-nombre')">Sí. El mundo está roto.</button>
+    <button class="btn" onclick="irA('p-nombre')">No lo sé. Estoy dormido.</button>
+    <button class="btn dorado" onclick="irA('p-nombre')">Por eso necesitan despertar.</button>
+  </div>
+</div>
+
+<!-- P20: EL NOMBRE — Joel 3:5 -->
+<div class="pantalla" id="p-nombre">
+  <div class="simbolo">✦</div>
+  <div class="hebreo-pequeno">&#x05D9;&#x05B4;&#x05E7;&#x05B0;&#x05E8;&#x05D0; &#x05D1;&#x05B0;&#x05E9;&#x05B5;&#x05DD; &#x05D9;&#x05B0;&#x05D4;&#x05D5;&#x05B8;&#x05D4;</div>
+  <div class="raiz">Yiqrá beShem YHWH — "Llamará en el Nombre de YHWH"</div>
+  <div class="narrativa">
+    Solo una cosa salva.<br><br>
+    No la religión.<br>
+    No el conocimiento.<br>
+    No la fuerza.<br><br>
+    <em>Llamar Su Nombre.</em>
+  </div>
+  <div class="linea"></div>
+  <div class="versiculo">Todo el que invoque el Nombre de YHWH será salvo.</div>
+  <div class="referencia">Joel 3:5</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-pregunta-mision')">Yo ya lo invoqué</button>
+    <button class="btn" onclick="irA('p-pregunta-mision')">Quiero aprenderlo</button>
+    <button class="btn" onclick="irA('p-pregunta-mision')">¿Y los que no lo saben?</button>
+  </div>
+</div>
+
+<!-- P21: LA PREGUNTA DE LA MISIÓN -->
+<div class="pantalla" id="p-pregunta-mision">
+  <div class="simbolo">✦</div>
+  <div class="narrativa">
+    Hay hermanos tuyos<br>
+    que no lo saben.<br><br>
+    Están perdidos.<br>
+    Están dormidos.<br><br>
+    <em>¿Piensas en alguno ahora mismo?</em>
+  </div>
+  <div class="botones">
+    <button class="btn dorado" onclick="elegirMision('si')">Sí. Hay alguien.</button>
+    <button class="btn" onclick="elegirMision('varios')">Hay varios.</button>
+    <button class="btn" onclick="elegirMision('yo')">Todavía soy yo el que necesita.</button>
+  </div>
+</div>
+
+<!-- P22: MISION RECIBIDA -->
+<div class="pantalla" id="p-mision">
+  <div class="llamarada">&#x1F525;</div>
+  <div class="narrativa" id="txt-mision-intro"></div>
+  <div class="linea"></div>
+  <div class="mision-card">
+    <div class="mision-titulo">&#x05DE;&#x05B4;&#x05E9;&#x05C1;&#x05B0;&#x05DC;&#x05B8;&#x05D7; — Misión</div>
+    <div class="mision-texto" id="txt-mision"></div>
+  </div>
+  <div class="versiculo" id="txt-mision-ver"></div>
+  <div class="referencia" id="txt-mision-ref"></div>
+  <div class="botones">
+    <button class="btn fuego" onclick="irA('p-profeta')">Acepto</button>
+    <button class="btn" onclick="irA('p-no-listo')">Todavía no estoy listo</button>
+  </div>
+</div>
+
+<!-- P23: NO LISTO -->
+<div class="pantalla" id="p-no-listo">
+  <div class="simbolo">✦</div>
+  <div class="narrativa">
+    Elías también dijo que no.<br><br>
+    Se sentó bajo el enebro<br>
+    y pidió morir.<br><br>
+    <em>Y el Padre le dio pan.<br>
+    Y le dijo: levántate.<br>
+    El camino es largo.</em>
+  </div>
+  <div class="linea"></div>
+  <div class="versiculo">Levántate y come, porque largo camino te resta.</div>
+  <div class="referencia">1 Reyes 19:7</div>
+  <div class="botones">
+    <button class="btn dorado" onclick="irA('p-mision')">Me levanto</button>
+  </div>
+</div>
+
+<!-- P24: EL PROFETA -->
+<div class="pantalla" id="p-profeta">
+  <div class="llamarada">&#x1F525;</div>
+  <div class="hebreo-pequeno">&#x05E0;&#x05B8;&#x05D1;&#x05B4;&#x05D0;</div>
+  <div class="raiz">Navi — H5012 — Profeta / El que habla lo que recibe</div>
+  <div class="narrativa">
+    No eres mensajero tuyo.<br><br>
+    Eres portavoz<br>
+    de Aquel que te encontró<br>
+    cuando estabas perdido.<br><br>
+    <em>Ve. Y di lo que te dijo.</em>
+  </div>
+  <div class="linea"></div>
+  <div class="versiculo">Vuestros hijos e hijas profetizarán.</div>
+  <div class="referencia">Joel 3:1</div>
+  <div class="botones">
+    <button class="btn fuego" onclick="irEnviado()">Voy</button>
+  </div>
+</div>
+
+<!-- P25: ENVIADO -->
+<div class="pantalla" id="p-enviado">
+  <div class="llamarada">&#x1F525;</div>
+  <div class="hebreo" style="margin-bottom:20px;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
+  <div class="narrativa">
+    Regresaste.<br>
+    Recibiste.<br>
+    <em>Fuiste enviado.</em>
+  </div>
+  <div class="linea"></div>
+  <div class="narrativa" style="font-size:15px; color:#a89060; margin-bottom:20px;">
+    El arco completo:<br><br>
+    <em>Perdido → Despierto → Casa → Espíritu → Enviado</em>
+  </div>
+  <div class="versiculo">Como el Padre me envió a mí, así también yo os envío a vosotros.</div>
+  <div class="referencia">Juan 20:21</div>
   <div class="botones">
     <button class="btn dorado" onclick="irA('p-inicio')">&#x1F3E0; Volver al inicio</button>
     <button class="btn" onclick="mostrarPerfil()">&#x1F464; Mi perfil</button>
   </div>
 </div>
 
-<!-- P17: PERFIL -->
+<!-- P26: PERFIL -->
 <div class="pantalla" id="p-perfil">
   <div class="simbolo">&#x1F464;</div>
   <div class="perfil-card">
@@ -431,6 +665,7 @@
     <div class="stat"><span>&#x1F3E0; Regresos</span><span id="p-regresos">0</span></div>
     <div class="stat"><span>&#x1F441; Escuchas</span><span id="p-escuchas">0</span></div>
     <div class="stat"><span>&#x1F511; Discernimientos</span><span id="p-discernidos">0</span></div>
+    <div class="stat"><span>&#x1F525; Enviados</span><span id="p-enviados">0</span></div>
     <div class="inventario-items" id="p-inventario"></div>
   </div>
   <div class="botones">
@@ -445,25 +680,33 @@
   tg.setHeaderColor && tg.setHeaderColor('#000000');
   tg.setBackgroundColor && tg.setBackgroundColor('#000000');
 
-  // Mapa de fondos por pantalla
   const FONDOS = {
-    'p-inicio':         "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
-    'p-espejo':         "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
-    'p-camino':         "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
-    'p-palabra':        "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
-    'p-profundidad':    "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
-    'p-consecuencia':   "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
-    'p-dilema':         "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
-    'p-oscuro':         "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
-    'p-grieta':         "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
-    'p-revelacion':     "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
-    'p-noentiendo':     "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
-    'p-escucha':        "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
-    'p-miedo':          "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
-    'p-esperar':        "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
-    'p-silencio-final': "juego YHWH/Gemini_Generated_Image_6nobgd6nobgd6nob.png",
-    'p-regreso':        "juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png",
-    'p-perfil':         "juego YHWH/Gemini_Generated_Image_ou0xldou0xldou0x.png",
+    'p-inicio':            "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
+    'p-espejo':            "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
+    'p-camino':            "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
+    'p-palabra':           "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
+    'p-profundidad':       "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
+    'p-consecuencia':      "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
+    'p-dilema':            "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
+    'p-oscuro':            "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
+    'p-grieta':            "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
+    'p-revelacion':        "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
+    'p-noentiendo':        "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
+    'p-escucha':           "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
+    'p-miedo':             "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
+    'p-esperar':           "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
+    'p-silencio-final':    "juego YHWH/Gemini_Generated_Image_6nobgd6nobgd6nob.png",
+    'p-regreso':           "juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png",
+    'p-derramamiento':     "juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png",
+    'p-ruaj':              "juego YHWH/Gemini_Generated_Image_vcwk9evcwk9evcwk.png",
+    'p-senales':           "juego YHWH/Gemini_Generated_Image_vcwk9evcwk9evcwk.png",
+    'p-nombre':            "juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png",
+    'p-pregunta-mision':   "juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png",
+    'p-mision':            "juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png",
+    'p-no-listo':          "juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png",
+    'p-profeta':           "juego YHWH/Gemini_Generated_Image_fxsah0fxsah0fxsa.png",
+    'p-enviado':           "juego YHWH/Gemini_Generated_Image_398fx4398fx4398f.png",
+    'p-perfil':            "juego YHWH/Gemini_Generated_Image_ou0xldou0xldou0x.png",
   };
 
   function cambiarFondo(id) {
@@ -474,15 +717,16 @@
 
   const estado = {
     camino: '',
+    mision: '',
     puntos: 0,
     regresos: 0,
     escuchas: 0,
     discernidos: 0,
+    enviados: 0,
     inventario: [],
     nombre: (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.first_name : 'Caminante',
   };
 
-  // Partículas
   const cont = document.getElementById('particulas');
   for (let i = 0; i < 40; i++) {
     const p = document.createElement('div');
@@ -494,10 +738,8 @@
     cont.appendChild(p);
   }
 
-  // Fondo inicial
   cambiarFondo('p-inicio');
 
-  // Navegación
   function irA(id, dato) {
     const actual = document.querySelector('.pantalla.visible');
     if (actual) {
@@ -574,6 +816,27 @@
     cons_miedo:    { txt: 'El miedo que sientes<br>no es debilidad.<br><br><em>Es la puerta temblando<br>antes de abrirse.</em>', ver: 'No temas, porque yo estoy contigo. No desmayes, porque yo soy tu Dios.', ref: 'Isaías 41:10' },
   };
 
+  const MISIONES = {
+    si: {
+      intro: 'Hay alguien en tu mente ahora mismo.<br><br><em>No es casualidad.</em>',
+      txt: 'Hoy, antes de dormir,<br><em>piensa en esa persona.</em><br><br>No para cambiarla.<br>Para llevarla delante del Padre.',
+      ver: 'El que gana almas es sabio.',
+      ref: 'Proverbios 11:30'
+    },
+    varios: {
+      intro: 'Varios.<br><br>El Padre te dio ojos<br><em>para ver a los perdidos.</em>',
+      txt: 'Uno a uno.<br><em>No en masa.</em><br><br>El Padre fue a buscar<br>la oveja perdida.<br>No al rebaño.',
+      ver: 'La oveja perdida la pone sobre sus hombros gozoso.',
+      ref: 'Lucas 15:5'
+    },
+    yo: {
+      intro: 'Todavía tú.<br><br><em>Está bien.</em><br>El Padre sigue trabajando.',
+      txt: 'Sigue viniendo.<br><em>Cada vez que vuelvas</em><br>estás siendo preparado<br>para cuando llegue tu momento.',
+      ver: 'El que comenzó en vosotros la buena obra, la perfeccionará.',
+      ref: 'Filipenses 1:6'
+    }
+  };
+
   function elegirCamino(c) {
     estado.camino = c;
     estado.puntos += 2;
@@ -599,7 +862,7 @@
 
   function mostrarConsecuencia(clave) {
     estado.puntos += 2;
-    if (!estado.inventario.includes('🗝')) estado.inventario.push('🗝');
+    if (!estado.inventario.includes('\uD83D\uDD11')) estado.inventario.push('\uD83D\uDD11');
     const c = CONSECUENCIAS[clave];
     document.getElementById('txt-consecuencia').innerHTML = c.txt;
     document.getElementById('txt-cons-ver').textContent = c.ver;
@@ -611,32 +874,19 @@
 
   function mostrarDilema() {
     const c = estado.camino;
-    let txt = '';
-    let btns = '';
+    let txt = '', btns = '';
     if (c === 'cansado') {
       txt = 'Hay una decisión delante de ti.<br><br>Ser honesto con alguien<br>y perder algo que aprecias.<br><br>O callar<br>y conservarlo.<br><br><em>¿Qué haces?</em>';
-      btns = `
-        <button class="btn dorado" onclick="irOscuro(true)">Soy honesto aunque duela</button>
-        <button class="btn" onclick="irOscuro(false)">Callo. No es el momento</button>
-        <button class="btn" onclick="irOscuro(false)">No sé qué haría</button>`;
+      btns = `<button class="btn dorado" onclick="irOscuro(true)">Soy honesto aunque duela</button><button class="btn" onclick="irOscuro(false)">Callo. No es el momento</button><button class="btn" onclick="irOscuro(false)">No sé qué haría</button>`;
     } else if (c === 'dudas') {
       txt = 'Si pudieras eliminar todas tus dudas ahora mismo...<br><br><em>¿Las eliminarías?</em>';
-      btns = `
-        <button class="btn dorado" onclick="irOscuro(true)">Sí, sin dudar</button>
-        <button class="btn" onclick="irOscuro(false)">No estoy seguro</button>
-        <button class="btn" onclick="irOscuro(true)">No. Las dudas me hacen humano</button>`;
+      btns = `<button class="btn dorado" onclick="irOscuro(true)">Sí, sin dudar</button><button class="btn" onclick="irOscuro(false)">No estoy seguro</button><button class="btn" onclick="irOscuro(true)">No. Las dudas me hacen humano</button>`;
     } else if (c === 'buscando') {
       txt = 'Lo que buscas...<br><br><em>¿Estás dispuesto a cambiar</em><br>para poder recibirlo?';
-      btns = `
-        <button class="btn dorado" onclick="irOscuro(true)">Sí, lo que haga falta</button>
-        <button class="btn" onclick="irOscuro(false)">No sé si puedo cambiar</button>
-        <button class="btn" onclick="irOscuro(false)">Tengo miedo de lo que implica</button>`;
+      btns = `<button class="btn dorado" onclick="irOscuro(true)">Sí, lo que haga falta</button><button class="btn" onclick="irOscuro(false)">No sé si puedo cambiar</button><button class="btn" onclick="irOscuro(false)">Tengo miedo de lo que implica</button>`;
     } else {
       txt = 'Estás aquí sin saber por qué.<br><br>Pero si hubiera una razón...<br><br><em>¿Querrías saberla?</em>';
-      btns = `
-        <button class="btn dorado" onclick="irOscuro(true)">Sí, quiero saber</button>
-        <button class="btn" onclick="irOscuro(false)">No sé si estoy listo</button>
-        <button class="btn" onclick="irOscuro(true)">Depende de la razón</button>`;
+      btns = `<button class="btn dorado" onclick="irOscuro(true)">Sí, quiero saber</button><button class="btn" onclick="irOscuro(false)">No sé si estoy listo</button><button class="btn" onclick="irOscuro(true)">Depende de la razón</button>`;
     }
     document.getElementById('txt-dilema').innerHTML = txt;
     document.getElementById('btn-dilema').innerHTML = btns;
@@ -646,21 +896,18 @@
   function irOscuro(profundo) {
     estado.discernidos++;
     estado.puntos += 3;
-    if (!estado.inventario.includes('🛡')) estado.inventario.push('🛡');
+    if (!estado.inventario.includes('\uD83D\uDEE1')) estado.inventario.push('\uD83D\uDEE1');
     if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-    let btns = '';
-    if (profundo) {
-      btns = '<button class="btn dorado" onclick="irA(\'p-grieta\')">Esa voz miente</button><button class="btn" onclick="irA(\'p-grieta\')">... lo sé pero duele</button>';
-    } else {
-      btns = '<button class="btn" onclick="irA(\'p-grieta\')">Sigo de todas formas</button><button class="btn" onclick="irA(\'p-grieta\')">No puedo ignorarla</button>';
-    }
+    let btns = profundo
+      ? '<button class="btn dorado" onclick="irA(\'p-grieta\')">Esa voz miente</button><button class="btn" onclick="irA(\'p-grieta\')">... lo sé pero duele</button>'
+      : '<button class="btn" onclick="irA(\'p-grieta\')">Sigo de todas formas</button><button class="btn" onclick="irA(\'p-grieta\')">No puedo ignorarla</button>';
     document.getElementById('btn-oscuro').innerHTML = btns;
     irA('p-oscuro');
   }
 
   function abrirme() {
     estado.escuchas++;
-    if (!estado.inventario.includes('🌬')) estado.inventario.push('🌬');
+    if (!estado.inventario.includes('\uD83C\uDF2C')) estado.inventario.push('\uD83C\uDF2C');
     irA('p-silencio-final');
   }
 
@@ -676,7 +923,7 @@
   function irRegreso() {
     estado.regresos++;
     estado.puntos += 6;
-    if (!estado.inventario.includes('🔥')) estado.inventario.push('🔥');
+    if (!estado.inventario.includes('\uD83D\uDD25')) estado.inventario.push('\uD83D\uDD25');
     if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     const idx = Math.min(estado.regresos - 1, PALABRAS_REGRESO.length - 1);
     document.getElementById('txt-regreso').textContent = PALABRAS_REGRESO[idx].v;
@@ -684,9 +931,29 @@
     irA('p-regreso');
   }
 
+  function elegirMision(tipo) {
+    estado.mision = tipo;
+    estado.puntos += 5;
+    const m = MISIONES[tipo];
+    document.getElementById('txt-mision-intro').innerHTML = m.intro;
+    document.getElementById('txt-mision').innerHTML = m.txt;
+    document.getElementById('txt-mision-ver').textContent = m.ver;
+    document.getElementById('txt-mision-ref').textContent = m.ref;
+    irA('p-mision');
+  }
+
+  function irEnviado() {
+    estado.enviados++;
+    estado.puntos += 10;
+    if (!estado.inventario.includes('\uD83D\uDD25')) estado.inventario.push('\uD83D\uDD25');
+    if (!estado.inventario.includes('\uD83D\uDC9B')) estado.inventario.push('\uD83D\uDC9B');
+    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+    irA('p-enviado');
+  }
+
   function mostrarPerfil() {
-    const niveles = [[0,'🌑 Buscador'],[10,'🌱 Caminante'],[25,'🛡 Guardián'],[50,'⚡ Anciano'],[80,'🔥 Profeta']];
-    let nv = '🌑 Buscador';
+    const niveles = [[0,'\uD83C\uDF11 Buscador'],[10,'\uD83C\uDF31 Caminante'],[25,'\uD83D\uDEE1 Guardián'],[50,'\u26A1 Anciano'],[80,'\uD83D\uDD25 Profeta'],[120,'\uD83D\uDC9B Enviado']];
+    let nv = '\uD83C\uDF11 Buscador';
     for (const [min, label] of niveles) { if (estado.puntos >= min) nv = label; }
     document.getElementById('perfil-nombre').textContent = estado.nombre;
     document.getElementById('perfil-nivel').textContent = nv;
@@ -694,6 +961,7 @@
     document.getElementById('p-regresos').textContent = estado.regresos;
     document.getElementById('p-escuchas').textContent = estado.escuchas;
     document.getElementById('p-discernidos').textContent = estado.discernidos;
+    document.getElementById('p-enviados').textContent = estado.enviados;
     document.getElementById('p-inventario').textContent = estado.inventario.join('  ') || '—';
     irA('p-perfil');
   }
