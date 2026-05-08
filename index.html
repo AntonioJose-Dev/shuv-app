@@ -20,8 +20,7 @@
       position: relative;
     }
     .bg-global {
-      position: fixed;
-      top: 0; left: 0;
+      position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
       background-size: cover;
       background-position: center;
@@ -30,26 +29,20 @@
       transition: background-image 0.8s ease;
     }
     .bg-overlay {
-      position: fixed;
-      top: 0; left: 0;
+      position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
       background: rgba(0,0,0,0.62);
       z-index: 1;
     }
     .particulas {
-      position: fixed;
-      top: 0; left: 0;
+      position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
-      pointer-events: none;
-      z-index: 2;
+      pointer-events: none; z-index: 2;
     }
     .particula {
-      position: absolute;
-      width: 2px; height: 2px;
-      background: #c9a84c;
-      border-radius: 50%;
-      animation: caer linear infinite;
-      opacity: 0;
+      position: absolute; width: 2px; height: 2px;
+      background: #c9a84c; border-radius: 50%;
+      animation: caer linear infinite; opacity: 0;
     }
     @keyframes caer {
       0%   { opacity: 0; transform: translateY(-10px); }
@@ -58,27 +51,23 @@
       100% { opacity: 0; transform: translateY(100vh); }
     }
     .pantalla {
-      position: relative;
-      z-index: 10;
-      display: flex;
+      display: none;
+      position: relative; z-index: 10;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      min-height: 100vh;
-      width: 100%;
-      padding: 40px 30px;
-      text-align: center;
+      align-items: center; justify-content: center;
+      min-height: 100vh; width: 100%;
+      padding: 40px 30px; text-align: center;
       opacity: 0;
       transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
+      transition: opacity 0.6s ease, transform 0.6s ease;
     }
-    .pantalla.visible { opacity: 1; transform: translateY(0); }
-    .pantalla.saliendo { opacity: 0; transform: translateY(-20px); }
+    .pantalla.visible {
+      display: flex;
+      opacity: 1; transform: translateY(0);
+    }
     .simbolo {
-      font-size: 48px;
-      color: #c9a84c;
-      margin-bottom: 16px;
-      letter-spacing: 8px;
+      font-size: 48px; color: #c9a84c;
+      margin-bottom: 16px; letter-spacing: 8px;
       text-shadow: 0 0 30px rgba(201,168,76,0.6);
       animation: pulsar 3s ease-in-out infinite;
     }
@@ -87,81 +76,52 @@
       50%       { text-shadow: 0 0 50px rgba(201,168,76,0.9), 0 0 80px rgba(201,168,76,0.3); }
     }
     .hebreo {
-      font-size: 36px;
-      color: #c9a84c;
-      margin-bottom: 40px;
-      letter-spacing: 4px;
-      opacity: 0.7;
+      font-size: 36px; color: #c9a84c;
+      margin-bottom: 40px; letter-spacing: 4px; opacity: 0.7;
     }
     .titulo {
-      font-size: 13px;
-      letter-spacing: 6px;
-      text-transform: uppercase;
-      color: #c9a84c;
-      margin-bottom: 50px;
-      opacity: 0.9;
+      font-size: 13px; letter-spacing: 6px;
+      text-transform: uppercase; color: #c9a84c;
+      margin-bottom: 50px; opacity: 0.9;
     }
     .narrativa {
-      font-size: 18px;
-      line-height: 1.9;
-      color: #e8dcc0;
-      max-width: 320px;
-      margin-bottom: 50px;
-      font-style: italic;
+      font-size: 18px; line-height: 1.9;
+      color: #e8dcc0; max-width: 320px;
+      margin-bottom: 50px; font-style: italic;
     }
     .narrativa em { color: #c9a84c; font-style: normal; }
     .versiculo {
-      font-size: 15px;
-      line-height: 1.8;
-      color: #a89060;
-      max-width: 300px;
-      margin-bottom: 12px;
-      font-style: italic;
+      font-size: 15px; line-height: 1.8;
+      color: #a89060; max-width: 300px;
+      margin-bottom: 12px; font-style: italic;
     }
     .referencia {
-      font-size: 12px;
-      letter-spacing: 3px;
-      color: #c9a84c;
-      opacity: 0.7;
-      margin-bottom: 50px;
-      text-transform: uppercase;
+      font-size: 12px; letter-spacing: 3px;
+      color: #c9a84c; opacity: 0.7;
+      margin-bottom: 50px; text-transform: uppercase;
     }
     .hebreo-pequeno {
-      font-size: 22px;
-      color: #c9a84c;
-      letter-spacing: 4px;
-      opacity: 0.6;
-      margin-bottom: 8px;
-      direction: rtl;
+      font-size: 22px; color: #c9a84c;
+      letter-spacing: 4px; opacity: 0.6;
+      margin-bottom: 8px; direction: rtl;
     }
     .raiz {
-      font-size: 11px;
-      letter-spacing: 3px;
-      color: #a89060;
-      text-transform: uppercase;
-      margin-bottom: 30px;
-      opacity: 0.7;
+      font-size: 11px; letter-spacing: 3px;
+      color: #a89060; text-transform: uppercase;
+      margin-bottom: 30px; opacity: 0.7;
     }
     .botones {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      width: 100%;
-      max-width: 300px;
+      display: flex; flex-direction: column;
+      gap: 14px; width: 100%; max-width: 300px;
     }
     .btn {
       background: rgba(0,0,0,0.5);
       border: 1px solid rgba(201,168,76,0.4);
-      color: #e8dcc0;
-      padding: 16px 24px;
-      font-size: 15px;
-      font-family: 'Georgia', serif;
-      border-radius: 2px;
-      cursor: pointer;
-      letter-spacing: 1px;
-      transition: all 0.3s ease;
-      position: relative;
-      overflow: hidden;
+      color: #e8dcc0; padding: 16px 24px;
+      font-size: 15px; font-family: 'Georgia', serif;
+      border-radius: 2px; cursor: pointer;
+      letter-spacing: 1px; transition: all 0.3s ease;
+      position: relative; overflow: hidden;
       backdrop-filter: blur(4px);
     }
     .btn:hover, .btn:active {
@@ -169,28 +129,15 @@
       border-color: rgba(201,168,76,0.9);
       color: #c9a84c;
     }
-    .btn::after {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 0; height: 0;
-      background: rgba(201,168,76,0.2);
-      border-radius: 50%;
-      transform: translate(-50%, -50%);
-      transition: width 0.4s, height 0.4s;
-    }
-    .btn:active::after { width: 300px; height: 300px; }
     .btn.dorado {
       background: rgba(201,168,76,0.2);
-      border-color: #c9a84c;
-      color: #c9a84c;
+      border-color: #c9a84c; color: #c9a84c;
       backdrop-filter: blur(4px);
     }
     .btn.fuego {
       background: rgba(180,60,20,0.25);
       border-color: rgba(220,100,30,0.8);
-      color: #f0c090;
-      backdrop-filter: blur(4px);
+      color: #f0c090; backdrop-filter: blur(4px);
     }
     .linea {
       width: 40px; height: 1px;
@@ -198,10 +145,8 @@
       margin: 30px auto;
     }
     .puntos {
-      font-size: 28px;
-      color: #c9a84c;
-      letter-spacing: 8px;
-      margin-bottom: 30px;
+      font-size: 28px; color: #c9a84c;
+      letter-spacing: 8px; margin-bottom: 30px;
       animation: aparecer 2s ease-in-out infinite;
     }
     @keyframes aparecer {
@@ -209,8 +154,7 @@
       50% { opacity: 1; }
     }
     .llamarada {
-      font-size: 56px;
-      margin-bottom: 20px;
+      font-size: 56px; margin-bottom: 20px;
       animation: llamear 2s ease-in-out infinite;
     }
     @keyframes llamear {
@@ -220,37 +164,26 @@
     .mision-card {
       background: rgba(0,0,0,0.65);
       border: 1px solid rgba(201,168,76,0.35);
-      border-radius: 4px;
-      padding: 20px 18px;
-      width: 100%;
-      max-width: 300px;
-      margin-bottom: 28px;
-      backdrop-filter: blur(8px);
+      border-radius: 4px; padding: 20px 18px;
+      width: 100%; max-width: 300px;
+      margin-bottom: 28px; backdrop-filter: blur(8px);
     }
     .mision-titulo {
-      font-size: 11px;
-      letter-spacing: 4px;
-      color: #c9a84c;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      opacity: 0.8;
+      font-size: 11px; letter-spacing: 4px;
+      color: #c9a84c; text-transform: uppercase;
+      margin-bottom: 12px; opacity: 0.8;
     }
     .mision-texto {
-      font-size: 16px;
-      line-height: 1.8;
-      color: #e8dcc0;
-      font-style: italic;
+      font-size: 16px; line-height: 1.8;
+      color: #e8dcc0; font-style: italic;
     }
     .mision-texto em { color: #c9a84c; font-style: normal; }
     .perfil-card {
       background: rgba(0,0,0,0.6);
       border: 1px solid rgba(201,168,76,0.2);
-      border-radius: 4px;
-      padding: 24px;
-      width: 100%;
-      max-width: 300px;
-      margin-bottom: 30px;
-      backdrop-filter: blur(8px);
+      border-radius: 4px; padding: 24px;
+      width: 100%; max-width: 300px;
+      margin-bottom: 30px; backdrop-filter: blur(8px);
     }
     .perfil-nombre { font-size: 20px; color: #c9a84c; margin-bottom: 6px; }
     .perfil-nivel {
@@ -329,7 +262,7 @@
   <div class="botones" id="btn-palabra"></div>
 </div>
 
-<!-- P5: PROFUNDIDAD DEL CAMINO -->
+<!-- P5: PROFUNDIDAD -->
 <div class="pantalla" id="p-profundidad">
   <div class="simbolo">✦</div>
   <div class="narrativa" id="txt-profundidad"></div>
@@ -369,8 +302,7 @@
 <div class="pantalla" id="p-grieta">
   <div class="puntos">· · ·</div>
   <div class="narrativa" style="font-size:22px; line-height:2.4;">
-    Hay alguien<br>
-    que <em>lo sabe.</em>
+    Hay alguien<br>que <em>lo sabe.</em>
   </div>
   <div class="botones" style="margin-top:20px;">
     <button class="btn dorado" onclick="irA('p-revelacion')">¿Quién?</button>
@@ -449,7 +381,7 @@
   </div>
 </div>
 
-<!-- P15: SILENCIO ANTES DE CASA -->
+<!-- P15: SILENCIO -->
 <div class="pantalla" id="p-silencio-final">
   <div class="puntos">· · ·</div>
   <div class="narrativa" style="font-size:16px; color:#a89060;">
@@ -462,7 +394,7 @@
   </div>
 </div>
 
-<!-- P16: REGRESO / SHUV -->
+<!-- P16: REGRESO -->
 <div class="pantalla" id="p-regreso">
   <div class="simbolo" style="font-size:56px;">&#x1F3E0;</div>
   <div class="narrativa">No ganaste una batalla.<br><em>Regresaste a casa.</em></div>
@@ -476,16 +408,14 @@
   </div>
 </div>
 
-<!-- P17: DERRAMAMIENTO — Joel 3:1 —
-     אֶשְׁפּוֹךְ אֶת־רוּחִי — Derramaré Mi Espíritu -->
+<!-- P17: DERRAMAMIENTO -->
 <div class="pantalla" id="p-derramamiento">
   <div class="llamarada">&#x1F525;</div>
   <div class="hebreo-pequeno">&#x05D0;&#x05B6;&#x05E9;&#x05B0;&#x05E4;&#x05BC;&#x05D5;&#x05B9;&#x05DA; &#x05D0;&#x05B6;&#x05EA;&#x05BE;&#x05E8;&#x05D5;&#x05BC;&#x05D7;&#x05B4;&#x05D9;</div>
   <div class="raiz">Joel 3:1 — Eshjpokh et-Rují</div>
   <div class="narrativa">
     Volviste.<br><br>
-    Y ahora el Padre<br>
-    cumple Su palabra:<br><br>
+    Y ahora el Padre cumple Su palabra:<br><br>
     <em>"Derramaré Mi Espíritu<br>sobre toda carne."</em>
   </div>
   <div class="linea"></div>
@@ -498,7 +428,7 @@
   </div>
 </div>
 
-<!-- P18: EL RÚAJ — La raíz del Espíritu -->
+<!-- P18: RUAJ -->
 <div class="pantalla" id="p-ruaj">
   <div class="simbolo">&#x1F32C;</div>
   <div class="hebreo-pequeno">&#x05E8;&#x05D5;&#x05BC;&#x05D7;</div>
@@ -506,7 +436,7 @@
   <div class="narrativa">
     La misma palabra.<br>
     <em>Viento.</em> <em>Espíritu.</em> <em>Aliento.</em><br><br>
-    El que sopló sobre las aguas<br>en el principio —<br><br>
+    El que sopló sobre las aguas en el principio—<br><br>
     <em>sopla ahora sobre ti.</em>
   </div>
   <div class="linea"></div>
@@ -517,16 +447,13 @@
   </div>
 </div>
 
-<!-- P19: SEÑALES EN EL CIELO — Joel 3:3-4 -->
+<!-- P19: SEÑALES -->
 <div class="pantalla" id="p-senales">
   <div class="simbolo">&#x1F31E;</div>
   <div class="narrativa">
-    Antes del Día Grande<br>
-    hay señales:<br><br>
-    <em>El sol se oscurece.<br>
-    La luna se vuelve sangre.</em><br><br>
-    ¿Las ves ya?<br>
-    <em>En el mundo que te rodea.</em>
+    Antes del Día Grande hay señales:<br><br>
+    <em>El sol se oscurece.<br>La luna se vuelve sangre.</em><br><br>
+    ¿Las ves ya?<br><em>En el mundo que te rodea.</em>
   </div>
   <div class="linea"></div>
   <div class="versiculo">El sol se convertirá en oscuridad, y la luna en sangre, antes que venga el día grande y espantoso de YHWH.</div>
@@ -538,16 +465,14 @@
   </div>
 </div>
 
-<!-- P20: EL NOMBRE — Joel 3:5 -->
+<!-- P20: EL NOMBRE -->
 <div class="pantalla" id="p-nombre">
   <div class="simbolo">✦</div>
   <div class="hebreo-pequeno">&#x05D9;&#x05B4;&#x05E7;&#x05B0;&#x05E8;&#x05D0; &#x05D1;&#x05B0;&#x05E9;&#x05B5;&#x05DD; &#x05D9;&#x05B0;&#x05D4;&#x05D5;&#x05B8;&#x05D4;</div>
-  <div class="raiz">Yiqrá beShem YHWH — "Llamará en el Nombre de YHWH"</div>
+  <div class="raiz">Yiqrá beShem YHWH — «Llamará en el Nombre de YHWH»</div>
   <div class="narrativa">
     Solo una cosa salva.<br><br>
-    No la religión.<br>
-    No el conocimiento.<br>
-    No la fuerza.<br><br>
+    No la religión.<br>No el conocimiento.<br>No la fuerza.<br><br>
     <em>Llamar Su Nombre.</em>
   </div>
   <div class="linea"></div>
@@ -560,14 +485,12 @@
   </div>
 </div>
 
-<!-- P21: LA PREGUNTA DE LA MISIÓN -->
+<!-- P21: PREGUNTA MISIÓN -->
 <div class="pantalla" id="p-pregunta-mision">
   <div class="simbolo">✦</div>
   <div class="narrativa">
-    Hay hermanos tuyos<br>
-    que no lo saben.<br><br>
-    Están perdidos.<br>
-    Están dormidos.<br><br>
+    Hay hermanos tuyos que no lo saben.<br><br>
+    Están perdidos. Están dormidos.<br><br>
     <em>¿Piensas en alguno ahora mismo?</em>
   </div>
   <div class="botones">
@@ -577,7 +500,7 @@
   </div>
 </div>
 
-<!-- P22: MISION RECIBIDA -->
+<!-- P22: MISION -->
 <div class="pantalla" id="p-mision">
   <div class="llamarada">&#x1F525;</div>
   <div class="narrativa" id="txt-mision-intro"></div>
@@ -599,11 +522,8 @@
   <div class="simbolo">✦</div>
   <div class="narrativa">
     Elías también dijo que no.<br><br>
-    Se sentó bajo el enebro<br>
-    y pidió morir.<br><br>
-    <em>Y el Padre le dio pan.<br>
-    Y le dijo: levántate.<br>
-    El camino es largo.</em>
+    Se sentó bajo el enebro y pidió morir.<br><br>
+    <em>Y el Padre le dio pan.<br>Y le dijo: levántate.<br>El camino es largo.</em>
   </div>
   <div class="linea"></div>
   <div class="versiculo">Levántate y come, porque largo camino te resta.</div>
@@ -613,16 +533,14 @@
   </div>
 </div>
 
-<!-- P24: EL PROFETA -->
+<!-- P24: PROFETA -->
 <div class="pantalla" id="p-profeta">
   <div class="llamarada">&#x1F525;</div>
   <div class="hebreo-pequeno">&#x05E0;&#x05B8;&#x05D1;&#x05B4;&#x05D0;</div>
   <div class="raiz">Navi — H5012 — Profeta / El que habla lo que recibe</div>
   <div class="narrativa">
     No eres mensajero tuyo.<br><br>
-    Eres portavoz<br>
-    de Aquel que te encontró<br>
-    cuando estabas perdido.<br><br>
+    Eres portavoz de Aquel que te encontró<br>cuando estabas perdido.<br><br>
     <em>Ve. Y di lo que te dijo.</em>
   </div>
   <div class="linea"></div>
@@ -638,9 +556,7 @@
   <div class="llamarada">&#x1F525;</div>
   <div class="hebreo" style="margin-bottom:20px;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
   <div class="narrativa">
-    Regresaste.<br>
-    Recibiste.<br>
-    <em>Fuiste enviado.</em>
+    Regresaste.<br>Recibiste.<br><em>Fuiste enviado.</em>
   </div>
   <div class="linea"></div>
   <div class="narrativa" style="font-size:15px; color:#a89060; margin-bottom:20px;">
@@ -675,58 +591,49 @@
 
 <script>
   const tg = window.Telegram.WebApp;
-  tg.ready();
-  tg.expand();
+  tg.ready(); tg.expand();
   tg.setHeaderColor && tg.setHeaderColor('#000000');
   tg.setBackgroundColor && tg.setBackgroundColor('#000000');
 
   const FONDOS = {
-    'p-inicio':            "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
-    'p-espejo':            "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
-    'p-camino':            "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
-    'p-palabra':           "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
-    'p-profundidad':       "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
-    'p-consecuencia':      "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
-    'p-dilema':            "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
-    'p-oscuro':            "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
-    'p-grieta':            "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
-    'p-revelacion':        "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
-    'p-noentiendo':        "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
-    'p-escucha':           "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
-    'p-miedo':             "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
-    'p-esperar':           "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
-    'p-silencio-final':    "juego YHWH/Gemini_Generated_Image_6nobgd6nobgd6nob.png",
-    'p-regreso':           "juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png",
-    'p-derramamiento':     "juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png",
-    'p-ruaj':              "juego YHWH/Gemini_Generated_Image_vcwk9evcwk9evcwk.png",
-    'p-senales':           "juego YHWH/Gemini_Generated_Image_vcwk9evcwk9evcwk.png",
-    'p-nombre':            "juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png",
-    'p-pregunta-mision':   "juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png",
-    'p-mision':            "juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png",
-    'p-no-listo':          "juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png",
-    'p-profeta':           "juego YHWH/Gemini_Generated_Image_fxsah0fxsah0fxsa.png",
-    'p-enviado':           "juego YHWH/Gemini_Generated_Image_398fx4398fx4398f.png",
-    'p-perfil':            "juego YHWH/Gemini_Generated_Image_ou0xldou0xldou0x.png",
+    'p-inicio':          'juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png',
+    'p-espejo':          'juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png',
+    'p-camino':          'juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png',
+    'p-palabra':         'juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png',
+    'p-profundidad':     'juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png',
+    'p-consecuencia':    'juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png',
+    'p-dilema':          'juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png',
+    'p-oscuro':          'juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png',
+    'p-grieta':          'juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png',
+    'p-revelacion':      'juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png',
+    'p-noentiendo':      'juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png',
+    'p-escucha':         'juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png',
+    'p-miedo':           'juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png',
+    'p-esperar':         'juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png',
+    'p-silencio-final':  'juego YHWH/Gemini_Generated_Image_6nobgd6nobgd6nob.png',
+    'p-regreso':         'juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png',
+    'p-derramamiento':   'juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png',
+    'p-ruaj':            'juego YHWH/Gemini_Generated_Image_vcwk9evcwk9evcwk.png',
+    'p-senales':         'juego YHWH/Gemini_Generated_Image_vcwk9evcwk9evcwk.png',
+    'p-nombre':          'juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png',
+    'p-pregunta-mision': 'juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png',
+    'p-mision':          'juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png',
+    'p-no-listo':        'juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png',
+    'p-profeta':         'juego YHWH/Gemini_Generated_Image_fxsah0fxsah0fxsa.png',
+    'p-enviado':         'juego YHWH/Gemini_Generated_Image_398fx4398fx4398f.png',
+    'p-perfil':          'juego YHWH/Gemini_Generated_Image_ou0xldou0xldou0x.png',
   };
-
-  function cambiarFondo(id) {
-    const bg = document.getElementById('bg-global');
-    const img = FONDOS[id];
-    if (img) bg.style.backgroundImage = `url('${img}')`;
-  }
 
   const estado = {
-    camino: '',
-    mision: '',
-    puntos: 0,
-    regresos: 0,
-    escuchas: 0,
-    discernidos: 0,
-    enviados: 0,
+    pantallaActual: 'p-inicio',
+    camino: '', mision: '',
+    puntos: 0, regresos: 0, escuchas: 0, discernidos: 0, enviados: 0,
     inventario: [],
     nombre: (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.first_name : 'Caminante',
+    navegando: false
   };
 
+  // Particulas
   const cont = document.getElementById('particulas');
   for (let i = 0; i < 40; i++) {
     const p = document.createElement('div');
@@ -738,23 +645,51 @@
     cont.appendChild(p);
   }
 
-  cambiarFondo('p-inicio');
+  // Fondo inicial
+  document.getElementById('bg-global').style.backgroundImage = "url('juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png')";
 
-  function irA(id, dato) {
-    const actual = document.querySelector('.pantalla.visible');
-    if (actual) {
-      actual.classList.add('saliendo');
-      setTimeout(() => {
-        actual.classList.remove('visible', 'saliendo');
-        const sig = document.getElementById(id);
-        if (sig) {
-          sig.classList.add('visible');
-          cambiarFondo(id);
-          window.scrollTo(0,0);
-        }
-      }, 400);
-    }
+  function irA(idDestino, dato) {
+    if (estado.navegando) return;
     if (dato) estado.ultimo = dato;
+    if (idDestino === estado.pantallaActual) return;
+
+    estado.navegando = true;
+    const actual = document.getElementById(estado.pantallaActual);
+    const destino = document.getElementById(idDestino);
+    if (!destino) { estado.navegando = false; return; }
+
+    // Ocultar actual con fade
+    if (actual) {
+      actual.style.opacity = '0';
+      actual.style.transform = 'translateY(-20px)';
+      setTimeout(() => {
+        actual.classList.remove('visible');
+        actual.style.opacity = '';
+        actual.style.transform = '';
+        mostrarPantalla(destino, idDestino);
+      }, 350);
+    } else {
+      mostrarPantalla(destino, idDestino);
+    }
+  }
+
+  function mostrarPantalla(el, id) {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.classList.add('visible');
+    estado.pantallaActual = id;
+    // Cambiar fondo
+    const img = FONDOS[id];
+    if (img) document.getElementById('bg-global').style.backgroundImage = `url('${img}')`;
+    window.scrollTo(0, 0);
+    // Animar entrada
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+        setTimeout(() => { estado.navegando = false; }, 400);
+      });
+    });
   }
 
   const CAMINOS = {
@@ -797,7 +732,7 @@
       txt: 'No saber<br><em>también es una puerta.</em>',
       ver: 'Señor, tú me has examinado y conocido. Sabes cuándo me siento y cuándo me levanto.',
       ref: 'Salmo 139:1',
-      prof_txt: 'Algo te trajo hasta aquí<br>sin que lo planeases.<br><br><em>¿Y si eso no fue casualidad?</em>',
+      prof_txt: 'Algo te trajo hasta aquí sin que lo planeases.<br><br><em>¿Y si eso no fue casualidad?</em>',
       prof_btns: [
         { txt: 'Puede ser coincidencia', sig: 'cons_no' },
         { txt: 'Nunca lo había pensado', sig: 'cons_si' },
@@ -809,11 +744,11 @@
   const CONSECUENCIAS = {
     cons_silencio: { txt: 'El silencio te asusta.<br><br>Porque en el silencio<br><em>algo podría hablarte.</em>', ver: 'Estad quietos, y conoced que yo soy Dios.', ref: 'Salmo 46:10' },
     cons_yo:       { txt: 'Huyes de ti mismo.<br><br>Pero <em>tú mismo</em><br>es exactamente lo que el Padre quiere encontrar.', ver: 'Cercano está el Señor a los quebrantados de corazón.', ref: 'Salmo 34:18' },
-    cons_pasado:   { txt: 'Hay algo detrás de ti<br>que sientes que te define.<br><br><em>Pero tú no eres lo que pasó.</em>', ver: 'Cuando pases por las aguas, yo estaré contigo. Los ríos no te anegarán.', ref: 'Isaías 43:2' },
-    cons_agotado:  { txt: 'Llegas vacío.<br><br><em>Bien.</em><br>Los vasos vacíos<br>son los únicos que se pueden llenar.', ver: 'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.', ref: 'Mateo 11:28' },
+    cons_pasado:   { txt: 'Hay algo detrás de ti que sientes que te define.<br><br><em>Pero tú no eres lo que pasó.</em>', ver: 'Cuando pases por las aguas, yo estaré contigo. Los ríos no te anegarán.', ref: 'Isaías 43:2' },
+    cons_agotado:  { txt: 'Llegas vacío.<br><br><em>Bien.</em><br>Los vasos vacíos son los únicos que se pueden llenar.', ver: 'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.', ref: 'Mateo 11:28' },
     cons_si:       { txt: 'Algo en ti lo sabe.<br><br>Antes de que tu mente<br><em>tuviera palabras para decirlo.</em>', ver: 'Antes de formarte en el vientre te conocí.', ref: 'Jeremías 1:5' },
-    cons_no:       { txt: 'No entender<br>no es un obstáculo.<br><br><em>Es el punto de partida.</em>', ver: 'Fíate del Señor de todo tu corazón, y no te apoyes en tu propia prudencia.', ref: 'Proverbios 3:5' },
-    cons_miedo:    { txt: 'El miedo que sientes<br>no es debilidad.<br><br><em>Es la puerta temblando<br>antes de abrirse.</em>', ver: 'No temas, porque yo estoy contigo. No desmayes, porque yo soy tu Dios.', ref: 'Isaías 41:10' },
+    cons_no:       { txt: 'No entender no es un obstáculo.<br><br><em>Es el punto de partida.</em>', ver: 'Fíate del Señor de todo tu corazón, y no te apoyes en tu propia prudencia.', ref: 'Proverbios 3:5' },
+    cons_miedo:    { txt: 'El miedo que sientes no es debilidad.<br><br><em>Es la puerta temblando antes de abrirse.</em>', ver: 'No temas, porque yo estoy contigo. No desmayes, porque yo soy tu Dios.', ref: 'Isaías 41:10' },
   };
 
   const MISIONES = {
@@ -825,7 +760,7 @@
     },
     varios: {
       intro: 'Varios.<br><br>El Padre te dio ojos<br><em>para ver a los perdidos.</em>',
-      txt: 'Uno a uno.<br><em>No en masa.</em><br><br>El Padre fue a buscar<br>la oveja perdida.<br>No al rebaño.',
+      txt: 'Uno a uno.<br><em>No en masa.</em><br><br>El Padre fue a buscar la oveja perdida.<br>No al rebaño.',
       ver: 'La oveja perdida la pone sobre sus hombros gozoso.',
       ref: 'Lucas 15:5'
     },
@@ -844,8 +779,7 @@
     document.getElementById('txt-palabra').innerHTML = d.txt;
     document.getElementById('txt-versiculo').textContent = d.ver;
     document.getElementById('txt-referencia').textContent = d.ref;
-    document.getElementById('btn-palabra').innerHTML =
-      '<button class="btn dorado" onclick="mostrarProfundidad()">Seguir →</button>';
+    document.getElementById('btn-palabra').innerHTML = '<button class="btn dorado" onclick="mostrarProfundidad()">Seguir →</button>';
     irA('p-palabra');
   }
 
@@ -862,13 +796,12 @@
 
   function mostrarConsecuencia(clave) {
     estado.puntos += 2;
-    if (!estado.inventario.includes('\uD83D\uDD11')) estado.inventario.push('\uD83D\uDD11');
+    if (!estado.inventario.includes('🔑')) estado.inventario.push('🔑');
     const c = CONSECUENCIAS[clave];
     document.getElementById('txt-consecuencia').innerHTML = c.txt;
     document.getElementById('txt-cons-ver').textContent = c.ver;
     document.getElementById('txt-cons-ref').textContent = c.ref;
-    document.getElementById('btn-consecuencia').innerHTML =
-      '<button class="btn dorado" onclick="mostrarDilema()">Seguir →</button>';
+    document.getElementById('btn-consecuencia').innerHTML = '<button class="btn dorado" onclick="mostrarDilema()">Seguir →</button>';
     irA('p-consecuencia');
   }
 
@@ -876,7 +809,7 @@
     const c = estado.camino;
     let txt = '', btns = '';
     if (c === 'cansado') {
-      txt = 'Hay una decisión delante de ti.<br><br>Ser honesto con alguien<br>y perder algo que aprecias.<br><br>O callar<br>y conservarlo.<br><br><em>¿Qué haces?</em>';
+      txt = 'Hay una decisión delante de ti.<br><br>Ser honesto con alguien y perder algo que aprecias.<br><br>O callar y conservarlo.<br><br><em>¿Qué haces?</em>';
       btns = `<button class="btn dorado" onclick="irOscuro(true)">Soy honesto aunque duela</button><button class="btn" onclick="irOscuro(false)">Callo. No es el momento</button><button class="btn" onclick="irOscuro(false)">No sé qué haría</button>`;
     } else if (c === 'dudas') {
       txt = 'Si pudieras eliminar todas tus dudas ahora mismo...<br><br><em>¿Las eliminarías?</em>';
@@ -894,9 +827,8 @@
   }
 
   function irOscuro(profundo) {
-    estado.discernidos++;
-    estado.puntos += 3;
-    if (!estado.inventario.includes('\uD83D\uDEE1')) estado.inventario.push('\uD83D\uDEE1');
+    estado.discernidos++; estado.puntos += 3;
+    if (!estado.inventario.includes('🛡')) estado.inventario.push('🛡');
     if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
     let btns = profundo
       ? '<button class="btn dorado" onclick="irA(\'p-grieta\')">Esa voz miente</button><button class="btn" onclick="irA(\'p-grieta\')">... lo sé pero duele</button>'
@@ -907,7 +839,7 @@
 
   function abrirme() {
     estado.escuchas++;
-    if (!estado.inventario.includes('\uD83C\uDF2C')) estado.inventario.push('\uD83C\uDF2C');
+    if (!estado.inventario.includes('🌬')) estado.inventario.push('🌬');
     irA('p-silencio-final');
   }
 
@@ -921,9 +853,8 @@
   ];
 
   function irRegreso() {
-    estado.regresos++;
-    estado.puntos += 6;
-    if (!estado.inventario.includes('\uD83D\uDD25')) estado.inventario.push('\uD83D\uDD25');
+    estado.regresos++; estado.puntos += 6;
+    if (!estado.inventario.includes('🔥')) estado.inventario.push('🔥');
     if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     const idx = Math.min(estado.regresos - 1, PALABRAS_REGRESO.length - 1);
     document.getElementById('txt-regreso').textContent = PALABRAS_REGRESO[idx].v;
@@ -932,8 +863,7 @@
   }
 
   function elegirMision(tipo) {
-    estado.mision = tipo;
-    estado.puntos += 5;
+    estado.mision = tipo; estado.puntos += 5;
     const m = MISIONES[tipo];
     document.getElementById('txt-mision-intro').innerHTML = m.intro;
     document.getElementById('txt-mision').innerHTML = m.txt;
@@ -943,17 +873,16 @@
   }
 
   function irEnviado() {
-    estado.enviados++;
-    estado.puntos += 10;
-    if (!estado.inventario.includes('\uD83D\uDD25')) estado.inventario.push('\uD83D\uDD25');
-    if (!estado.inventario.includes('\uD83D\uDC9B')) estado.inventario.push('\uD83D\uDC9B');
+    estado.enviados++; estado.puntos += 10;
+    if (!estado.inventario.includes('🔥')) estado.inventario.push('🔥');
+    if (!estado.inventario.includes('💛')) estado.inventario.push('💛');
     if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
     irA('p-enviado');
   }
 
   function mostrarPerfil() {
-    const niveles = [[0,'\uD83C\uDF11 Buscador'],[10,'\uD83C\uDF31 Caminante'],[25,'\uD83D\uDEE1 Guardián'],[50,'\u26A1 Anciano'],[80,'\uD83D\uDD25 Profeta'],[120,'\uD83D\uDC9B Enviado']];
-    let nv = '\uD83C\uDF11 Buscador';
+    const niveles = [[0,'🌑 Buscador'],[10,'🌱 Caminante'],[25,'🛡 Guardián'],[50,'⚡ Anciano'],[80,'🔥 Profeta'],[120,'💛 Enviado']];
+    let nv = '🌑 Buscador';
     for (const [min, label] of niveles) { if (estado.puntos >= min) nv = label; }
     document.getElementById('perfil-nombre').textContent = estado.nombre;
     document.getElementById('perfil-nivel').textContent = nv;
