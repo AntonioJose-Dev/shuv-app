@@ -1,250 +1,196 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <title>SHUV</title>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #000;
-      color: #f0e6c8;
-      font-family: 'Georgia', serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      position: relative;
+    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+    :root{
+      --oro:#c9a84c;--oro2:rgba(201,168,76,0.15);--oro3:rgba(201,168,76,0.4);
+      --crema:#e8dcc0;--gris:#a89060;--negro:rgba(0,0,0,0.7);
+      --menu-h:70px;
     }
-    .bg-global {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
-      z-index: 0;
-      transition: background-image 0.8s ease;
+    html,body{height:100%;overflow:hidden;background:#000;color:var(--crema);font-family:'Georgia',serif;}
+
+    /* FONDO */
+    #bg{position:fixed;inset:0;background-size:cover;background-position:center;z-index:0;transition:opacity .5s;}
+    #bg.fade{opacity:0;}
+    #overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:1;}
+
+    /* PARTICULAS */
+    #pts{position:fixed;inset:0;pointer-events:none;z-index:2;}
+    .pt{position:absolute;width:2px;height:2px;background:var(--oro);border-radius:50%;animation:caer linear infinite;opacity:0;}
+    @keyframes caer{0%{opacity:0;transform:translateY(-10px)}10%{opacity:.8}90%{opacity:.3}100%{opacity:0;transform:translateY(100vh)}}
+
+    /* PANTALLAS */
+    .scr{
+      display:none;position:fixed;inset:0;bottom:var(--menu-h);
+      z-index:10;flex-direction:column;align-items:center;justify-content:center;
+      padding:20px 24px 10px;text-align:center;overflow-y:auto;
+      opacity:0;transition:opacity .4s,transform .4s;transform:translateY(16px);
     }
-    .bg-overlay {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.62);
-      z-index: 1;
+    .scr.on{display:flex;opacity:1;transform:translateY(0);}
+
+    /* MENÚ FIJO ABAJO */
+    #menu{
+      position:fixed;bottom:0;left:0;right:0;height:var(--menu-h);
+      background:rgba(0,0,0,.85);border-top:1px solid rgba(201,168,76,.2);
+      backdrop-filter:blur(12px);z-index:100;
+      display:flex;align-items:center;justify-content:space-around;
     }
-    .particulas {
-      position: fixed; top: 0; left: 0;
-      width: 100%; height: 100%;
-      pointer-events: none; z-index: 2;
+    .mn{
+      display:flex;flex-direction:column;align-items:center;gap:4px;
+      padding:8px 16px;cursor:pointer;opacity:.45;transition:opacity .2s,transform .2s;
+      font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gris);
     }
-    .particula {
-      position: absolute; width: 2px; height: 2px;
-      background: #c9a84c; border-radius: 50%;
-      animation: caer linear infinite; opacity: 0;
+    .mn .ico{font-size:22px;line-height:1;}
+    .mn.act{opacity:1;color:var(--oro);}
+    .mn.act .ico{filter:drop-shadow(0 0 6px var(--oro));}
+    .mn:active{transform:scale(.92);}
+
+    /* BARRA DE PROGRESO ESPIRITUAL */
+    #barra-wrap{
+      position:fixed;top:0;left:0;right:0;height:3px;z-index:99;
+      background:rgba(255,255,255,.05);
     }
-    @keyframes caer {
-      0%   { opacity: 0; transform: translateY(-10px); }
-      10%  { opacity: 0.8; }
-      90%  { opacity: 0.4; }
-      100% { opacity: 0; transform: translateY(100vh); }
+    #barra-fill{height:100%;background:linear-gradient(90deg,var(--oro),#f0c050);width:0%;transition:width .8s ease;}
+
+    /* TIPOGRAFÍA */
+    .h1{font-size:11px;letter-spacing:6px;text-transform:uppercase;color:var(--oro);margin-bottom:6px;opacity:.8;}
+    .heb{font-size:34px;color:var(--oro);letter-spacing:4px;opacity:.75;margin-bottom:4px;}
+    .heb-sm{font-size:20px;color:var(--oro);letter-spacing:3px;opacity:.6;direction:rtl;margin-bottom:4px;}
+    .raiz{font-size:10px;letter-spacing:2px;color:var(--gris);text-transform:uppercase;opacity:.7;margin-bottom:18px;}
+    .narr{font-size:17px;line-height:1.95;color:var(--crema);max-width:310px;font-style:italic;margin-bottom:20px;}
+    .narr em{color:var(--oro);font-style:normal;}
+    .ver{font-size:14px;line-height:1.75;color:var(--gris);max-width:290px;font-style:italic;margin-bottom:6px;}
+    .ref{font-size:11px;letter-spacing:3px;color:var(--oro);opacity:.65;margin-bottom:20px;text-transform:uppercase;}
+    .linea{width:36px;height:1px;background:var(--oro3);margin:16px auto;}
+    .puntos{font-size:26px;color:var(--oro);letter-spacing:8px;margin-bottom:20px;animation:pulse2 2s ease-in-out infinite;}
+    @keyframes pulse2{0%,100%{opacity:.2}50%{opacity:1}}
+
+    /* SÍMBOLO CENTRAL ANIMADO */
+    .orb{
+      width:110px;height:110px;border-radius:50%;
+      background:radial-gradient(circle at 40% 35%, rgba(201,168,76,.35), rgba(0,0,0,0) 70%);
+      border:1px solid var(--oro3);
+      display:flex;align-items:center;justify-content:center;
+      font-size:52px;margin-bottom:20px;
+      animation:orbpulse 3s ease-in-out infinite;
+      box-shadow:0 0 30px rgba(201,168,76,.15),inset 0 0 20px rgba(201,168,76,.1);
+      cursor:pointer;
     }
-    .pantalla {
-      display: none;
-      position: relative; z-index: 10;
-      flex-direction: column;
-      align-items: center; justify-content: center;
-      min-height: 100vh; width: 100%;
-      padding: 40px 30px; text-align: center;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
+    @keyframes orbpulse{
+      0%,100%{box-shadow:0 0 20px rgba(201,168,76,.1),inset 0 0 10px rgba(201,168,76,.08);}
+      50%{box-shadow:0 0 50px rgba(201,168,76,.35),inset 0 0 30px rgba(201,168,76,.18);}
     }
-    .pantalla.visible {
-      display: flex;
-      opacity: 1; transform: translateY(0);
+    .orb.tap{animation:orbtap .3s ease;} 
+    @keyframes orbtap{50%{transform:scale(.93);}}
+
+    /* BOTONES */
+    .btns{display:flex;flex-direction:column;gap:11px;width:100%;max-width:300px;margin-top:6px;}
+    .btn{
+      background:rgba(0,0,0,.55);border:1px solid var(--oro3);
+      color:var(--crema);padding:14px 20px;font-size:14px;
+      font-family:'Georgia',serif;border-radius:3px;cursor:pointer;
+      letter-spacing:.8px;transition:all .25s;backdrop-filter:blur(6px);
+      position:relative;overflow:hidden;
     }
-    .simbolo {
-      font-size: 48px; color: #c9a84c;
-      margin-bottom: 16px; letter-spacing: 8px;
-      text-shadow: 0 0 30px rgba(201,168,76,0.6);
-      animation: pulsar 3s ease-in-out infinite;
+    .btn:active{background:var(--oro2);border-color:var(--oro);color:var(--oro);transform:scale(.98);}
+    .btn.oro{background:var(--oro2);border-color:var(--oro);color:var(--oro);}
+    .btn.fuego{background:rgba(180,50,10,.3);border-color:rgba(220,90,20,.7);color:#f0b080;}
+    .btn.rojo{background:rgba(140,20,20,.3);border-color:rgba(200,50,50,.6);color:#f08080;}
+
+    /* RIPPLE */
+    .ripple{position:absolute;border-radius:50%;background:rgba(201,168,76,.25);
+      transform:scale(0);animation:ripp .5s linear;pointer-events:none;}
+    @keyframes ripp{to{transform:scale(4);opacity:0;}}
+
+    /* CARDS */
+    .card{
+      background:rgba(0,0,0,.6);border:1px solid rgba(201,168,76,.25);
+      border-radius:6px;padding:18px 16px;width:100%;max-width:300px;
+      backdrop-filter:blur(10px);margin-bottom:16px;
     }
-    @keyframes pulsar {
-      0%, 100% { text-shadow: 0 0 20px rgba(201,168,76,0.4); }
-      50%       { text-shadow: 0 0 50px rgba(201,168,76,0.9), 0 0 80px rgba(201,168,76,0.3); }
+    .card-title{font-size:10px;letter-spacing:4px;color:var(--oro);
+      text-transform:uppercase;margin-bottom:10px;opacity:.8;}
+    .card-body{font-size:15px;line-height:1.8;color:var(--crema);font-style:italic;}
+    .card-body em{color:var(--oro);font-style:normal;}
+
+    /* PERFIL PANEL */
+    #scr-perfil .avatar{
+      width:80px;height:80px;border-radius:50%;
+      background:radial-gradient(circle, rgba(201,168,76,.3), rgba(0,0,0,0));
+      border:2px solid var(--oro3);display:flex;align-items:center;justify-content:center;
+      font-size:36px;margin-bottom:12px;
     }
-    .hebreo {
-      font-size: 36px; color: #c9a84c;
-      margin-bottom: 40px; letter-spacing: 4px; opacity: 0.7;
+    .nivel-badge{
+      background:var(--oro2);border:1px solid var(--oro3);
+      padding:4px 14px;border-radius:20px;font-size:11px;letter-spacing:3px;
+      color:var(--oro);text-transform:uppercase;margin-bottom:20px;
     }
-    .titulo {
-      font-size: 13px; letter-spacing: 6px;
-      text-transform: uppercase; color: #c9a84c;
-      margin-bottom: 50px; opacity: 0.9;
+    .stats-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:300px;margin-bottom:16px;}
+    .stat-box{
+      background:rgba(0,0,0,.5);border:1px solid rgba(201,168,76,.15);
+      border-radius:6px;padding:12px 10px;text-align:center;backdrop-filter:blur(6px);
     }
-    .narrativa {
-      font-size: 18px; line-height: 1.9;
-      color: #e8dcc0; max-width: 320px;
-      margin-bottom: 50px; font-style: italic;
-    }
-    .narrativa em { color: #c9a84c; font-style: normal; }
-    .versiculo {
-      font-size: 15px; line-height: 1.8;
-      color: #a89060; max-width: 300px;
-      margin-bottom: 12px; font-style: italic;
-    }
-    .referencia {
-      font-size: 12px; letter-spacing: 3px;
-      color: #c9a84c; opacity: 0.7;
-      margin-bottom: 50px; text-transform: uppercase;
-    }
-    .hebreo-pequeno {
-      font-size: 22px; color: #c9a84c;
-      letter-spacing: 4px; opacity: 0.6;
-      margin-bottom: 8px; direction: rtl;
-    }
-    .raiz {
-      font-size: 11px; letter-spacing: 3px;
-      color: #a89060; text-transform: uppercase;
-      margin-bottom: 30px; opacity: 0.7;
-    }
-    .botones {
-      display: flex; flex-direction: column;
-      gap: 14px; width: 100%; max-width: 300px;
-    }
-    .btn {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid rgba(201,168,76,0.4);
-      color: #e8dcc0; padding: 16px 24px;
-      font-size: 15px; font-family: 'Georgia', serif;
-      border-radius: 2px; cursor: pointer;
-      letter-spacing: 1px; transition: all 0.3s ease;
-      position: relative; overflow: hidden;
-      backdrop-filter: blur(4px);
-    }
-    .btn:hover, .btn:active {
-      background: rgba(201,168,76,0.15);
-      border-color: rgba(201,168,76,0.9);
-      color: #c9a84c;
-    }
-    .btn.dorado {
-      background: rgba(201,168,76,0.2);
-      border-color: #c9a84c; color: #c9a84c;
-      backdrop-filter: blur(4px);
-    }
-    .btn.fuego {
-      background: rgba(180,60,20,0.25);
-      border-color: rgba(220,100,30,0.8);
-      color: #f0c090; backdrop-filter: blur(4px);
-    }
-    .linea {
-      width: 40px; height: 1px;
-      background: rgba(201,168,76,0.3);
-      margin: 30px auto;
-    }
-    .puntos {
-      font-size: 28px; color: #c9a84c;
-      letter-spacing: 8px; margin-bottom: 30px;
-      animation: aparecer 2s ease-in-out infinite;
-    }
-    @keyframes aparecer {
-      0%, 100% { opacity: 0.2; }
-      50% { opacity: 1; }
-    }
-    .llamarada {
-      font-size: 56px; margin-bottom: 20px;
-      animation: llamear 2s ease-in-out infinite;
-    }
-    @keyframes llamear {
-      0%, 100% { transform: scale(1); filter: brightness(1); }
-      50% { transform: scale(1.15); filter: brightness(1.4); }
-    }
-    .mision-card {
-      background: rgba(0,0,0,0.65);
-      border: 1px solid rgba(201,168,76,0.35);
-      border-radius: 4px; padding: 20px 18px;
-      width: 100%; max-width: 300px;
-      margin-bottom: 28px; backdrop-filter: blur(8px);
-    }
-    .mision-titulo {
-      font-size: 11px; letter-spacing: 4px;
-      color: #c9a84c; text-transform: uppercase;
-      margin-bottom: 12px; opacity: 0.8;
-    }
-    .mision-texto {
-      font-size: 16px; line-height: 1.8;
-      color: #e8dcc0; font-style: italic;
-    }
-    .mision-texto em { color: #c9a84c; font-style: normal; }
-    .perfil-card {
-      background: rgba(0,0,0,0.6);
-      border: 1px solid rgba(201,168,76,0.2);
-      border-radius: 4px; padding: 24px;
-      width: 100%; max-width: 300px;
-      margin-bottom: 30px; backdrop-filter: blur(8px);
-    }
-    .perfil-nombre { font-size: 20px; color: #c9a84c; margin-bottom: 6px; }
-    .perfil-nivel {
-      font-size: 12px; letter-spacing: 3px;
-      color: #a89060; text-transform: uppercase; margin-bottom: 20px;
-    }
-    .stat {
-      display: flex; justify-content: space-between;
-      font-size: 13px; color: #a89060;
-      margin-bottom: 8px; padding-bottom: 8px;
-      border-bottom: 1px solid rgba(201,168,76,0.1);
-    }
-    .stat span:last-child { color: #e8dcc0; }
-    .inventario-items { font-size: 24px; letter-spacing: 6px; margin-top: 16px; text-align: center; }
+    .stat-ico{font-size:22px;margin-bottom:4px;}
+    .stat-val{font-size:20px;color:var(--oro);font-weight:bold;}
+    .stat-lbl{font-size:9px;letter-spacing:2px;color:var(--gris);text-transform:uppercase;margin-top:2px;}
+    .inventario{font-size:26px;letter-spacing:8px;text-align:center;margin-bottom:16px;min-height:34px;}
+
+    /* BARRA DE PROGRESO NIVEL */
+    .xp-bar{width:100%;max-width:300px;height:6px;background:rgba(255,255,255,.08);
+      border-radius:3px;margin-bottom:20px;overflow:hidden;}
+    .xp-fill{height:100%;background:linear-gradient(90deg,var(--oro),#f0c050);border-radius:3px;transition:width 1s ease;}
+
+    /* FUEGO ANIMADO */
+    .fire{font-size:54px;animation:llamear 2s ease-in-out infinite;margin-bottom:14px;}
+    @keyframes llamear{0%,100%{transform:scale(1)}50%{transform:scale(1.12);filter:brightness(1.4)}}
+
+    /* OSCURO */
+    .oscuro .orb{filter:grayscale(.8) brightness(.4);}
+
+    /* SEPARADOR */
+    .sep{width:100%;max-width:300px;display:flex;align-items:center;gap:10px;margin:10px 0;}
+    .sep-line{flex:1;height:1px;background:rgba(201,168,76,.15);}
+    .sep-dot{color:var(--oro);opacity:.4;font-size:10px;}
   </style>
 </head>
 <body>
 
-<div class="bg-global" id="bg-global"></div>
-<div class="bg-overlay"></div>
-<div class="particulas" id="particulas"></div>
+<div id="barra-wrap"><div id="barra-fill"></div></div>
+<div id="bg"></div>
+<div id="overlay"></div>
+<div id="pts"></div>
 
-<!-- P1: ENTRADA -->
-<div class="pantalla visible" id="p-inicio">
-  <div class="simbolo">✦</div>
-  <div class="titulo">S H U V</div>
-  <div class="hebreo">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
-  <div class="narrativa">
+<!-- ══════════════════════════════════════════
+     PANTALLA 1 — ENTRADA (splash)
+══════════════════════════════════════════ -->
+<div class="scr on" id="scr-inicio">
+  <div class="h1">S &nbsp; H &nbsp; U &nbsp; V</div>
+  <div class="heb">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
+  <div class="orb" id="orb-inicio" onclick="tapInicio()">✦</div>
+  <div class="narr">
     Algo te trajo hasta aquí.<br>
     No sabemos qué.<br>
     <em>Tú tampoco.</em>
   </div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-espejo','si')">Sí</button>
-    <button class="btn" onclick="irA('p-espejo','nose')">No sé</button>
-    <button class="btn" onclick="irA('p-espejo','curiosidad')">Por curiosidad</button>
+  <div class="btns">
+    <button class="btn oro" onclick="entrar('si')">Sí, algo me trajo</button>
+    <button class="btn" onclick="entrar('nose')">No lo sé</button>
+    <button class="btn" onclick="entrar('curiosidad')">Solo curiosidad</button>
   </div>
 </div>
 
-<!-- P2: ESPEJO -->
-<div class="pantalla" id="p-espejo">
-  <div class="simbolo">✦</div>
-  <div class="narrativa">
-    Antes de seguir.<br><br>
-    ¿Cuándo fue la última vez<br>
-    que algo te dejó<br>
-    <em>sin palabras?</em>
-  </div>
-  <div class="botones">
-    <button class="btn" onclick="irA('p-camino','lejos')">Hace mucho</button>
-    <button class="btn" onclick="irA('p-camino','ayer')">Ayer</button>
-    <button class="btn" onclick="irA('p-camino','nunca')">Nunca me ha pasado</button>
-    <button class="btn dorado" onclick="irA('p-camino','ahora')">Ahora mismo</button>
-  </div>
-</div>
-
-<!-- P3: CAMINO -->
-<div class="pantalla" id="p-camino">
-  <div class="simbolo">✦</div>
-  <div class="narrativa">¿Cómo llegas hoy?</div>
-  <div class="botones">
+<!-- ══════════════════════════════════════════
+     PANTALLA 2 — CAMINO (¿cómo llegas?)
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-camino">
+  <div class="orb">🌑</div>
+  <div class="narr">¿Cómo llegas hoy?</div>
+  <div class="btns">
     <button class="btn" onclick="elegirCamino('cansado')">Cansado</button>
     <button class="btn" onclick="elegirCamino('dudas')">Con dudas</button>
     <button class="btn" onclick="elegirCamino('buscando')">Buscando algo</button>
@@ -252,648 +198,587 @@
   </div>
 </div>
 
-<!-- P4: PALABRA DEL CAMINO -->
-<div class="pantalla" id="p-palabra">
-  <div class="simbolo">✦</div>
-  <div class="narrativa" id="txt-palabra"></div>
+<!-- ══════════════════════════════════════════
+     PANTALLA 3 — PALABRA (respuesta al camino)
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-palabra">
+  <div class="orb" id="orb-palabra">✦</div>
+  <div class="narr" id="txt-palabra"></div>
   <div class="linea"></div>
-  <div class="versiculo" id="txt-versiculo"></div>
-  <div class="referencia" id="txt-referencia"></div>
-  <div class="botones" id="btn-palabra"></div>
-</div>
-
-<!-- P5: PROFUNDIDAD -->
-<div class="pantalla" id="p-profundidad">
-  <div class="simbolo">✦</div>
-  <div class="narrativa" id="txt-profundidad"></div>
-  <div class="botones" id="btn-profundidad"></div>
-</div>
-
-<!-- P6: CONSECUENCIA -->
-<div class="pantalla" id="p-consecuencia">
-  <div class="simbolo">✦</div>
-  <div class="narrativa" id="txt-consecuencia"></div>
-  <div class="linea"></div>
-  <div class="versiculo" id="txt-cons-ver"></div>
-  <div class="referencia" id="txt-cons-ref"></div>
-  <div class="botones" id="btn-consecuencia"></div>
-</div>
-
-<!-- P7: DILEMA -->
-<div class="pantalla" id="p-dilema">
-  <div class="simbolo">✦</div>
-  <div class="narrativa" id="txt-dilema"></div>
-  <div class="botones" id="btn-dilema"></div>
-</div>
-
-<!-- P8: MOMENTO OSCURO -->
-<div class="pantalla" id="p-oscuro">
-  <div class="simbolo" style="color:#555; text-shadow:none;">✦</div>
-  <div class="narrativa" style="color:#888;">
-    Una voz dice:<br><br>
-    <em style="color:#666;">"No eres suficiente.<br>
-    Nunca lo serás.<br>
-    Nadie te espera."</em>
+  <div class="ver" id="txt-ver"></div>
+  <div class="ref" id="txt-ref"></div>
+  <div class="btns">
+    <button class="btn oro" onclick="irA('scr-dilema')">Seguir →</button>
   </div>
-  <div class="botones" id="btn-oscuro"></div>
 </div>
 
-<!-- P9: GRIETA -->
-<div class="pantalla" id="p-grieta">
+<!-- ══════════════════════════════════════════
+     PANTALLA 4 — DILEMA (una sola pregunta real)
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-dilema">
+  <div class="orb">⚖️</div>
+  <div class="narr" id="txt-dilema"></div>
+  <div class="btns" id="btns-dilema"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 5 — OSCURO
+══════════════════════════════════════════ -->
+<div class="scr oscuro" id="scr-oscuro">
+  <div class="orb" style="border-color:rgba(80,80,80,.3);background:none;">🕳️</div>
+  <div class="narr" style="color:#777;">
+    Una voz dice:<br><br>
+    <em style="color:#555;">"No eres suficiente.<br>
+    Nunca lo serás."</em>
+  </div>
+  <div class="btns" id="btns-oscuro"></div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA 6 — GRIETA
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-grieta">
   <div class="puntos">· · ·</div>
-  <div class="narrativa" style="font-size:22px; line-height:2.4;">
+  <div class="narr" style="font-size:22px;line-height:2.4;">
     Hay alguien<br>que <em>lo sabe.</em>
   </div>
-  <div class="botones" style="margin-top:20px;">
-    <button class="btn dorado" onclick="irA('p-revelacion')">¿Quién?</button>
+  <div class="btns">
+    <button class="btn oro" onclick="irA('scr-revelacion')">¿Quién?</button>
   </div>
 </div>
 
-<!-- P10: REVELACIÓN -->
-<div class="pantalla" id="p-revelacion">
-  <div class="simbolo">✦</div>
-  <div class="narrativa">
-    No llegaste por algoritmo.<br>
-    No llegaste por casualidad.<br><br>
+<!-- ══════════════════════════════════════════
+     PANTALLA 7 — REVELACIÓN
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-revelacion">
+  <div class="orb">🚪</div>
+  <div class="narr">
+    No llegaste por algoritmo.<br><br>
     <em>Fuiste llamado por tu nombre.</em>
   </div>
   <div class="linea"></div>
-  <div class="versiculo">He aquí, yo estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré.</div>
-  <div class="referencia">Apocalipsis 3:20</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-escucha')">Escucho</button>
-    <button class="btn" onclick="irA('p-noentiendo')">No entiendo</button>
+  <div class="ver">He aquí, yo estoy a la puerta y llamo. Si alguno oye mi voz y abre la puerta, entraré.</div>
+  <div class="ref">Apocalipsis 3:20</div>
+  <div class="btns">
+    <button class="btn oro" onclick="abrirme()">Me abro</button>
+    <button class="btn" onclick="irA('scr-miedo')">Me da miedo</button>
   </div>
 </div>
 
-<!-- P11: NO ENTIENDO -->
-<div class="pantalla" id="p-noentiendo">
-  <div class="simbolo">✦</div>
-  <div class="narrativa">No tienes que entender.<br><em>Solo tienes que escuchar.</em></div>
+<!-- ══════════════════════════════════════════
+     PANTALLA 8 — MIEDO
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-miedo">
+  <div class="orb">🛡️</div>
+  <div class="narr">El miedo no te expulsa.<br><em>También es bienvenido aquí.</em></div>
   <div class="linea"></div>
-  <div class="versiculo">Tras el fuego, una voz apacible y delicada.</div>
-  <div class="referencia">1 Reyes 19:12</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-escucha')">Escucho</button>
+  <div class="ver">No temas, porque yo estoy contigo.</div>
+  <div class="ref">Isaías 41:10</div>
+  <div class="btns">
+    <button class="btn oro" onclick="abrirme()">Me abro</button>
   </div>
 </div>
 
-<!-- P12: ESCUCHA -->
-<div class="pantalla" id="p-escucha">
-  <div class="simbolo" style="font-size:60px;">&#x1F32C;</div>
-  <div class="narrativa">
-    Algo sopla dentro de ti.<br>
-    No lo empujaste.<br>
-    No lo fabricaste.<br>
-    <em>Llegó.</em>
-  </div>
-  <div class="linea"></div>
-  <div class="versiculo">Mis ovejas oyen mi voz, y yo las conozco, y me siguen.</div>
-  <div class="referencia">Juan 10:27</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="abrirme()">Me abro</button>
-    <button class="btn" onclick="irA('p-miedo')">Me da miedo abrirme</button>
-    <button class="btn" onclick="irA('p-esperar')">Espero un poco más</button>
-  </div>
-</div>
-
-<!-- P13: MIEDO -->
-<div class="pantalla" id="p-miedo">
-  <div class="simbolo">✦</div>
-  <div class="narrativa">El miedo no te expulsa.<br><em>También es bienvenido aquí.</em></div>
-  <div class="linea"></div>
-  <div class="versiculo">No temas, porque yo estoy contigo. No desmayes, porque yo soy tu Dios.</div>
-  <div class="referencia">Isaías 41:10</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="abrirme()">Me abro</button>
-  </div>
-</div>
-
-<!-- P14: ESPERAR -->
-<div class="pantalla" id="p-esperar">
-  <div class="simbolo">&#x23F3;</div>
-  <div class="narrativa">Esperaste.<br><em>Eso también es fe.</em></div>
-  <div class="linea"></div>
-  <div class="versiculo">Los que esperan en el Señor renovarán sus fuerzas. Correrán, y no se cansarán.</div>
-  <div class="referencia">Isaías 40:31</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="abrirme()">Ya estoy listo</button>
-  </div>
-</div>
-
-<!-- P15: SILENCIO -->
-<div class="pantalla" id="p-silencio-final">
+<!-- ══════════════════════════════════════════
+     PANTALLA 9 — SILENCIO
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-silencio">
   <div class="puntos">· · ·</div>
-  <div class="narrativa" style="font-size:16px; color:#a89060;">
+  <div class="narr" style="color:var(--gris);font-size:16px;">
     El Señor tu Dios está en medio de ti.<br><br>
     <em>Te callará con su amor.</em>
   </div>
-  <div class="referencia" style="margin-top:0;">Sofonías 3:17</div>
-  <div class="botones" style="margin-top:40px;">
-    <button class="btn dorado" onclick="irRegreso()">· · ·</button>
+  <div class="ref">Sofonías 3:17</div>
+  <div class="btns" style="margin-top:24px;">
+    <button class="btn oro" onclick="irRegreso()">· · ·</button>
   </div>
 </div>
 
-<!-- P16: REGRESO -->
-<div class="pantalla" id="p-regreso">
-  <div class="simbolo" style="font-size:56px;">&#x1F3E0;</div>
-  <div class="narrativa">No ganaste una batalla.<br><em>Regresaste a casa.</em></div>
+<!-- ══════════════════════════════════════════
+     PANTALLA 10 — REGRESO 🏠
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-regreso">
+  <div class="orb">🏠</div>
+  <div class="narr">No ganaste una batalla.<br><em>Regresaste a casa.</em></div>
   <div class="linea"></div>
-  <div class="versiculo" id="txt-regreso"></div>
-  <div class="referencia" id="ref-regreso"></div>
-  <div class="hebreo" style="margin-top:30px; margin-bottom:30px;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-derramamiento')">&#x1F525; Seguir</button>
-    <button class="btn" onclick="mostrarPerfil()">&#x1F464; Mi perfil</button>
+  <div class="ver" id="txt-regreso"></div>
+  <div class="ref" id="ref-regreso"></div>
+  <div class="heb" style="margin:16px 0;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
+  <div class="btns">
+    <button class="btn fuego" onclick="irA('scr-derramamiento')">🔥 Seguir — Joel 3</button>
   </div>
 </div>
 
-<!-- P17: DERRAMAMIENTO -->
-<div class="pantalla" id="p-derramamiento">
-  <div class="llamarada">&#x1F525;</div>
-  <div class="hebreo-pequeno">&#x05D0;&#x05B6;&#x05E9;&#x05B0;&#x05E4;&#x05BC;&#x05D5;&#x05B9;&#x05DA; &#x05D0;&#x05B6;&#x05EA;&#x05BE;&#x05E8;&#x05D5;&#x05BC;&#x05D7;&#x05B4;&#x05D9;</div>
-  <div class="raiz">Joel 3:1 — Eshjpokh et-Rují</div>
-  <div class="narrativa">
-    Volviste.<br><br>
-    Y ahora el Padre cumple Su palabra:<br><br>
-    <em>"Derramaré Mi Espíritu<br>sobre toda carne."</em>
-  </div>
-  <div class="linea"></div>
-  <div class="versiculo">Vuestros hijos e hijas profetizarán. Vuestros ancianos soñarán sueños. Vuestros jóvenes verán visiones.</div>
-  <div class="referencia">Joel 3:1</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-ruaj')">Siento algo</button>
-    <button class="btn" onclick="irA('p-ruaj')">No siento nada</button>
-    <button class="btn" onclick="irA('p-ruaj')">Tengo miedo de sentirlo</button>
+<!-- ══════════════════════════════════════════
+     PANTALLA 11 — DERRAMAMIENTO (hub principal post-regreso)
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-derramamiento">
+  <div class="fire">🔥</div>
+  <div class="heb-sm">&#x05D0;&#x05B6;&#x05E9;&#x05B0;&#x05E4;&#x05BC;&#x05D5;&#x05B9;&#x05DA; &#x05D0;&#x05B6;&#x05EA;&#x05BE;&#x05E8;&#x05D5;&#x05BC;&#x05D7;&#x05B4;&#x05D9;</div>
+  <div class="raiz">Joel 3:1 — «Derramaré Mi Espíritu sobre toda carne»</div>
+  <div class="narr">Volviste.<br><em>Y ahora el Padre cumple Su palabra.</em></div>
+  <div class="ver">Vuestros hijos e hijas profetizarán. Vuestros jóvenes verán visiones.</div>
+  <div class="ref">Joel 3:1</div>
+  <div class="btns">
+    <button class="btn oro" onclick="irA('scr-mision-eleccion')">🔥 Recibir misión</button>
+    <button class="btn" onclick="navMenu('perfil')">👤 Ver mi perfil</button>
   </div>
 </div>
 
-<!-- P18: RUAJ -->
-<div class="pantalla" id="p-ruaj">
-  <div class="simbolo">&#x1F32C;</div>
-  <div class="hebreo-pequeno">&#x05E8;&#x05D5;&#x05BC;&#x05D7;</div>
-  <div class="raiz">Rúaj — H7307 — Viento / Espíritu / Aliento</div>
-  <div class="narrativa">
-    La misma palabra.<br>
-    <em>Viento.</em> <em>Espíritu.</em> <em>Aliento.</em><br><br>
-    El que sopló sobre las aguas en el principio—<br><br>
-    <em>sopla ahora sobre ti.</em>
+<!-- ══════════════════════════════════════════
+     PANTALLA 12 — ELECCIÓN DE MISIÓN
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-mision-eleccion">
+  <div class="orb">✦</div>
+  <div class="narr">
+    Hay hermanos que no lo saben.<br>
+    Están dormidos.<br><br>
+    <em>¿Piensas en alguno?</em>
   </div>
-  <div class="linea"></div>
-  <div class="versiculo">Y también sobre los siervos y las siervas derramaré Mi Espíritu en aquellos días.</div>
-  <div class="referencia">Joel 3:2</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-senales')">Continúo</button>
-  </div>
-</div>
-
-<!-- P19: SEÑALES -->
-<div class="pantalla" id="p-senales">
-  <div class="simbolo">&#x1F31E;</div>
-  <div class="narrativa">
-    Antes del Día Grande hay señales:<br><br>
-    <em>El sol se oscurece.<br>La luna se vuelve sangre.</em><br><br>
-    ¿Las ves ya?<br><em>En el mundo que te rodea.</em>
-  </div>
-  <div class="linea"></div>
-  <div class="versiculo">El sol se convertirá en oscuridad, y la luna en sangre, antes que venga el día grande y espantoso de YHWH.</div>
-  <div class="referencia">Joel 3:4</div>
-  <div class="botones">
-    <button class="btn" onclick="irA('p-nombre')">Sí. El mundo está roto.</button>
-    <button class="btn" onclick="irA('p-nombre')">No lo sé. Estoy dormido.</button>
-    <button class="btn dorado" onclick="irA('p-nombre')">Por eso necesitan despertar.</button>
-  </div>
-</div>
-
-<!-- P20: EL NOMBRE -->
-<div class="pantalla" id="p-nombre">
-  <div class="simbolo">✦</div>
-  <div class="hebreo-pequeno">&#x05D9;&#x05B4;&#x05E7;&#x05B0;&#x05E8;&#x05D0; &#x05D1;&#x05B0;&#x05E9;&#x05B5;&#x05DD; &#x05D9;&#x05B0;&#x05D4;&#x05D5;&#x05B8;&#x05D4;</div>
-  <div class="raiz">Yiqrá beShem YHWH — «Llamará en el Nombre de YHWH»</div>
-  <div class="narrativa">
-    Solo una cosa salva.<br><br>
-    No la religión.<br>No el conocimiento.<br>No la fuerza.<br><br>
-    <em>Llamar Su Nombre.</em>
-  </div>
-  <div class="linea"></div>
-  <div class="versiculo">Todo el que invoque el Nombre de YHWH será salvo.</div>
-  <div class="referencia">Joel 3:5</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-pregunta-mision')">Yo ya lo invoqué</button>
-    <button class="btn" onclick="irA('p-pregunta-mision')">Quiero aprenderlo</button>
-    <button class="btn" onclick="irA('p-pregunta-mision')">¿Y los que no lo saben?</button>
-  </div>
-</div>
-
-<!-- P21: PREGUNTA MISIÓN -->
-<div class="pantalla" id="p-pregunta-mision">
-  <div class="simbolo">✦</div>
-  <div class="narrativa">
-    Hay hermanos tuyos que no lo saben.<br><br>
-    Están perdidos. Están dormidos.<br><br>
-    <em>¿Piensas en alguno ahora mismo?</em>
-  </div>
-  <div class="botones">
-    <button class="btn dorado" onclick="elegirMision('si')">Sí. Hay alguien.</button>
+  <div class="btns">
+    <button class="btn oro" onclick="elegirMision('si')">Sí. Hay alguien.</button>
     <button class="btn" onclick="elegirMision('varios')">Hay varios.</button>
     <button class="btn" onclick="elegirMision('yo')">Todavía soy yo el que necesita.</button>
   </div>
 </div>
 
-<!-- P22: MISION -->
-<div class="pantalla" id="p-mision">
-  <div class="llamarada">&#x1F525;</div>
-  <div class="narrativa" id="txt-mision-intro"></div>
-  <div class="linea"></div>
-  <div class="mision-card">
-    <div class="mision-titulo">&#x05DE;&#x05B4;&#x05E9;&#x05C1;&#x05B0;&#x05DC;&#x05B8;&#x05D7; — Misión</div>
-    <div class="mision-texto" id="txt-mision"></div>
+<!-- ══════════════════════════════════════════
+     PANTALLA 13 — MISIÓN RECIBIDA
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-mision">
+  <div class="fire">🔥</div>
+  <div class="card">
+    <div class="card-title">&#x05DE;&#x05B4;&#x05E9;&#x05C1;&#x05B0;&#x05DC;&#x05B8;&#x05D7; — Misión</div>
+    <div class="card-body" id="txt-mision"></div>
   </div>
-  <div class="versiculo" id="txt-mision-ver"></div>
-  <div class="referencia" id="txt-mision-ref"></div>
-  <div class="botones">
-    <button class="btn fuego" onclick="irA('p-profeta')">Acepto</button>
-    <button class="btn" onclick="irA('p-no-listo')">Todavía no estoy listo</button>
+  <div class="ver" id="txt-mision-ver"></div>
+  <div class="ref" id="txt-mision-ref"></div>
+  <div class="btns">
+    <button class="btn fuego" onclick="irEnviado()">Acepto</button>
+    <button class="btn" onclick="irA('scr-no-listo')">Todavía no</button>
   </div>
 </div>
 
-<!-- P23: NO LISTO -->
-<div class="pantalla" id="p-no-listo">
-  <div class="simbolo">✦</div>
-  <div class="narrativa">
+<!-- ══════════════════════════════════════════
+     PANTALLA 14 — NO LISTO
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-no-listo">
+  <div class="orb">🌱</div>
+  <div class="narr">
     Elías también dijo que no.<br><br>
-    Se sentó bajo el enebro y pidió morir.<br><br>
-    <em>Y el Padre le dio pan.<br>Y le dijo: levántate.<br>El camino es largo.</em>
+    <em>Y el Padre le dio pan.<br>El camino es largo.</em>
   </div>
-  <div class="linea"></div>
-  <div class="versiculo">Levántate y come, porque largo camino te resta.</div>
-  <div class="referencia">1 Reyes 19:7</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-mision')">Me levanto</button>
+  <div class="ver">Levántate y come, porque largo camino te resta.</div>
+  <div class="ref">1 Reyes 19:7</div>
+  <div class="btns">
+    <button class="btn oro" onclick="irA('scr-mision')">Me levanto</button>
   </div>
 </div>
 
-<!-- P24: PROFETA -->
-<div class="pantalla" id="p-profeta">
-  <div class="llamarada">&#x1F525;</div>
-  <div class="hebreo-pequeno">&#x05E0;&#x05B8;&#x05D1;&#x05B4;&#x05D0;</div>
-  <div class="raiz">Navi — H5012 — Profeta / El que habla lo que recibe</div>
-  <div class="narrativa">
-    No eres mensajero tuyo.<br><br>
-    Eres portavoz de Aquel que te encontró<br>cuando estabas perdido.<br><br>
-    <em>Ve. Y di lo que te dijo.</em>
-  </div>
-  <div class="linea"></div>
-  <div class="versiculo">Vuestros hijos e hijas profetizarán.</div>
-  <div class="referencia">Joel 3:1</div>
-  <div class="botones">
-    <button class="btn fuego" onclick="irEnviado()">Voy</button>
-  </div>
-</div>
-
-<!-- P25: ENVIADO -->
-<div class="pantalla" id="p-enviado">
-  <div class="llamarada">&#x1F525;</div>
-  <div class="hebreo" style="margin-bottom:20px;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
-  <div class="narrativa">
-    Regresaste.<br>Recibiste.<br><em>Fuiste enviado.</em>
-  </div>
-  <div class="linea"></div>
-  <div class="narrativa" style="font-size:15px; color:#a89060; margin-bottom:20px;">
-    El arco completo:<br><br>
+<!-- ══════════════════════════════════════════
+     PANTALLA 15 — ENVIADO (final del arco)
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-enviado">
+  <div class="fire">🔥</div>
+  <div class="heb" style="margin-bottom:12px;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
+  <div class="narr">Regresaste.<br>Recibiste.<br><em>Fuiste enviado.</em></div>
+  <div class="sep"><div class="sep-line"></div><div class="sep-dot">✦</div><div class="sep-line"></div></div>
+  <div class="narr" style="font-size:13px;color:var(--gris);">
     <em>Perdido → Despierto → Casa → Espíritu → Enviado</em>
   </div>
-  <div class="versiculo">Como el Padre me envió a mí, así también yo os envío a vosotros.</div>
-  <div class="referencia">Juan 20:21</div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-inicio')">&#x1F3E0; Volver al inicio</button>
-    <button class="btn" onclick="mostrarPerfil()">&#x1F464; Mi perfil</button>
+  <div class="ver">Como el Padre me envió a mí, así también yo os envío.</div>
+  <div class="ref">Juan 20:21</div>
+  <div class="btns">
+    <button class="btn oro" onclick="navMenu('inicio')">🏠 Inicio</button>
+    <button class="btn" onclick="navMenu('perfil')">👤 Mi perfil</button>
   </div>
 </div>
 
-<!-- P26: PERFIL -->
-<div class="pantalla" id="p-perfil">
-  <div class="simbolo">&#x1F464;</div>
-  <div class="perfil-card">
-    <div class="perfil-nombre" id="perfil-nombre">—</div>
-    <div class="perfil-nivel" id="perfil-nivel">Buscador</div>
-    <div class="stat"><span>✦ Fruto</span><span id="p-puntos">0 pts</span></div>
-    <div class="stat"><span>&#x1F3E0; Regresos</span><span id="p-regresos">0</span></div>
-    <div class="stat"><span>&#x1F441; Escuchas</span><span id="p-escuchas">0</span></div>
-    <div class="stat"><span>&#x1F511; Discernimientos</span><span id="p-discernidos">0</span></div>
-    <div class="stat"><span>&#x1F525; Enviados</span><span id="p-enviados">0</span></div>
-    <div class="inventario-items" id="p-inventario"></div>
-  </div>
-  <div class="botones">
-    <button class="btn dorado" onclick="irA('p-inicio')">← Volver</button>
+<!-- ══════════════════════════════════════════
+     PANTALLA — HUB INICIO (desde menú)
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-hub">
+  <div class="orb" id="orb-hub" onclick="iniciarCamino()">✦</div>
+  <div class="h1" style="margin-bottom:4px;">S H U V</div>
+  <div class="heb" style="margin-bottom:16px;">&#x05E9;&#x05C1;&#x05D5;&#x05BC;&#x05D1;</div>
+  <div class="narr" id="hub-saludo" style="font-size:15px;margin-bottom:20px;"></div>
+  <div class="btns">
+    <button class="btn oro" onclick="iniciarCamino()">✦ Comenzar nuevo camino</button>
   </div>
 </div>
+
+<!-- ══════════════════════════════════════════
+     PANTALLA — PERFIL (panel de juego)
+══════════════════════════════════════════ -->
+<div class="scr" id="scr-perfil">
+  <div class="avatar" id="avatar-emoji">🌑</div>
+  <div class="h1" id="prf-nombre">Caminante</div>
+  <div class="nivel-badge" id="prf-nivel">Buscador</div>
+  <div class="inventario" id="prf-inventario">—</div>
+  <div class="xp-bar"><div class="xp-fill" id="prf-xp"></div></div>
+  <div class="stats-grid">
+    <div class="stat-box">
+      <div class="stat-ico">🏠</div>
+      <div class="stat-val" id="prf-regresos">0</div>
+      <div class="stat-lbl">Regresos</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-ico">🔥</div>
+      <div class="stat-val" id="prf-enviados">0</div>
+      <div class="stat-lbl">Enviados</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-ico">🌬️</div>
+      <div class="stat-val" id="prf-escuchas">0</div>
+      <div class="stat-lbl">Escuchas</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-ico">✦</div>
+      <div class="stat-val" id="prf-puntos">0</div>
+      <div class="stat-lbl">Fruto</div>
+    </div>
+  </div>
+  <div class="btns">
+    <button class="btn" onclick="navMenu('inicio')">← Volver</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     MENÚ INFERIOR FIJO
+══════════════════════════════════════════ -->
+<nav id="menu">
+  <div class="mn act" id="mn-inicio" onclick="navMenu('inicio')">
+    <span class="ico">✦</span>
+    <span>Inicio</span>
+  </div>
+  <div class="mn" id="mn-camino" onclick="navMenu('camino')">
+    <span class="ico">🌑</span>
+    <span>Camino</span>
+  </div>
+  <div class="mn" id="mn-mision" onclick="navMenu('mision')">
+    <span class="ico">🔥</span>
+    <span>Misión</span>
+  </div>
+  <div class="mn" id="mn-perfil" onclick="navMenu('perfil')">
+    <span class="ico">👤</span>
+    <span>Perfil</span>
+  </div>
+</nav>
 
 <script>
-  const tg = window.Telegram.WebApp;
-  tg.ready(); tg.expand();
-  tg.setHeaderColor && tg.setHeaderColor('#000000');
-  tg.setBackgroundColor && tg.setBackgroundColor('#000000');
+const tg = window.Telegram.WebApp;
+tg.ready(); tg.expand();
+tg.setHeaderColor && tg.setHeaderColor('#000000');
+tg.setBackgroundColor && tg.setBackgroundColor('#000000');
 
-  const FONDOS = {
-    'p-inicio':          'juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png',
-    'p-espejo':          'juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png',
-    'p-camino':          'juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png',
-    'p-palabra':         'juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png',
-    'p-profundidad':     'juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png',
-    'p-consecuencia':    'juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png',
-    'p-dilema':          'juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png',
-    'p-oscuro':          'juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png',
-    'p-grieta':          'juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png',
-    'p-revelacion':      'juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png',
-    'p-noentiendo':      'juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png',
-    'p-escucha':         'juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png',
-    'p-miedo':           'juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png',
-    'p-esperar':         'juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png',
-    'p-silencio-final':  'juego YHWH/Gemini_Generated_Image_6nobgd6nobgd6nob.png',
-    'p-regreso':         'juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png',
-    'p-derramamiento':   'juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png',
-    'p-ruaj':            'juego YHWH/Gemini_Generated_Image_vcwk9evcwk9evcwk.png',
-    'p-senales':         'juego YHWH/Gemini_Generated_Image_vcwk9evcwk9evcwk.png',
-    'p-nombre':          'juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png',
-    'p-pregunta-mision': 'juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png',
-    'p-mision':          'juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png',
-    'p-no-listo':        'juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png',
-    'p-profeta':         'juego YHWH/Gemini_Generated_Image_fxsah0fxsah0fxsa.png',
-    'p-enviado':         'juego YHWH/Gemini_Generated_Image_398fx4398fx4398f.png',
-    'p-perfil':          'juego YHWH/Gemini_Generated_Image_ou0xldou0xldou0x.png',
-  };
+// ─── ESTADO ───────────────────────────────────────────
+const E = {
+  actual: 'scr-inicio',
+  camino: '',
+  puntos: 0, regresos: 0, escuchas: 0, enviados: 0,
+  inventario: [],
+  nombre: (tg.initDataUnsafe?.user?.first_name) || 'Caminante',
+  bloqueado: false,
+  primerAcceso: true
+};
 
-  const estado = {
-    pantallaActual: 'p-inicio',
-    camino: '', mision: '',
-    puntos: 0, regresos: 0, escuchas: 0, discernidos: 0, enviados: 0,
-    inventario: [],
-    nombre: (tg.initDataUnsafe && tg.initDataUnsafe.user) ? tg.initDataUnsafe.user.first_name : 'Caminante',
-    navegando: false
-  };
+// ─── FONDOS ───────────────────────────────────────────
+const FONDOS = {
+  'scr-inicio':          "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
+  'scr-hub':             "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
+  'scr-camino':          "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
+  'scr-palabra':         "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
+  'scr-dilema':          "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
+  'scr-oscuro':          "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
+  'scr-grieta':          "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
+  'scr-revelacion':      "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
+  'scr-miedo':           "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
+  'scr-silencio':        "juego YHWH/Gemini_Generated_Image_6nobgd6nobgd6nob.png",
+  'scr-regreso':         "juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png",
+  'scr-derramamiento':   "juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png",
+  'scr-mision-eleccion': "juego YHWH/Gemini_Generated_Image_7t9wdg7t9wdg7t9w.png",
+  'scr-mision':          "juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png",
+  'scr-no-listo':        "juego YHWH/Gemini_Generated_Image_c9s7dyc9s7dyc9s7.png",
+  'scr-enviado':         "juego YHWH/Gemini_Generated_Image_398fx4398fx4398f.png",
+  'scr-perfil':          "juego YHWH/Gemini_Generated_Image_ou0xldou0xldou0x.png",
+};
 
-  // Particulas
-  const cont = document.getElementById('particulas');
-  for (let i = 0; i < 40; i++) {
-    const p = document.createElement('div');
-    p.className = 'particula';
-    p.style.left = Math.random() * 100 + '%';
-    p.style.animationDuration = (6 + Math.random() * 10) + 's';
-    p.style.animationDelay = (Math.random() * 10) + 's';
-    p.style.width = p.style.height = (1 + Math.random() * 2) + 'px';
-    cont.appendChild(p);
+// ─── PARTÍCULAS ───────────────────────────────────────
+const pCont = document.getElementById('pts');
+for(let i=0;i<35;i++){
+  const p = document.createElement('div');
+  p.className='pt';
+  p.style.cssText=`left:${Math.random()*100}%;animation-duration:${6+Math.random()*10}s;animation-delay:${Math.random()*12}s;width:${1+Math.random()*2}px;height:${1+Math.random()*2}px;`;
+  pCont.appendChild(p);
+}
+
+// Fondo inicial
+document.getElementById('bg').style.backgroundImage = "url('juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png')";
+
+// ─── NAVEGACIÓN ───────────────────────────────────────
+function irA(id, sinBloqueo=false) {
+  if(E.bloqueado && !sinBloqueo) return;
+  if(id === E.actual) return;
+  E.bloqueado = true;
+
+  const prev = document.getElementById(E.actual);
+  const next = document.getElementById(id);
+  if(!next){E.bloqueado=false;return;}
+
+  // Fade out fondo si cambia
+  const bgEl = document.getElementById('bg');
+  if(FONDOS[id] && FONDOS[id] !== FONDOS[E.actual]){
+    bgEl.classList.add('fade');
+    setTimeout(()=>{
+      bgEl.style.backgroundImage=`url('${FONDOS[id]}')`;
+      bgEl.classList.remove('fade');
+    },250);
   }
 
-  // Fondo inicial
-  document.getElementById('bg-global').style.backgroundImage = "url('juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png')";
-
-  function irA(idDestino, dato) {
-    if (estado.navegando) return;
-    if (dato) estado.ultimo = dato;
-    if (idDestino === estado.pantallaActual) return;
-
-    estado.navegando = true;
-    const actual = document.getElementById(estado.pantallaActual);
-    const destino = document.getElementById(idDestino);
-    if (!destino) { estado.navegando = false; return; }
-
-    // Ocultar actual con fade
-    if (actual) {
-      actual.style.opacity = '0';
-      actual.style.transform = 'translateY(-20px)';
-      setTimeout(() => {
-        actual.classList.remove('visible');
-        actual.style.opacity = '';
-        actual.style.transform = '';
-        mostrarPantalla(destino, idDestino);
-      }, 350);
-    } else {
-      mostrarPantalla(destino, idDestino);
-    }
+  // Ocultar actual
+  if(prev){
+    prev.style.opacity='0';
+    prev.style.transform='translateY(-14px)';
+    setTimeout(()=>{
+      prev.classList.remove('on');
+      prev.style.opacity='';prev.style.transform='';
+      mostrar(next,id);
+    },280);
+  } else {
+    mostrar(next,id);
   }
+}
 
-  function mostrarPantalla(el, id) {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.classList.add('visible');
-    estado.pantallaActual = id;
-    // Cambiar fondo
-    const img = FONDOS[id];
-    if (img) document.getElementById('bg-global').style.backgroundImage = `url('${img}')`;
-    window.scrollTo(0, 0);
-    // Animar entrada
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        el.style.opacity = '1';
-        el.style.transform = 'translateY(0)';
-        setTimeout(() => { estado.navegando = false; }, 400);
-      });
-    });
+function mostrar(el,id){
+  el.style.opacity='0';el.style.transform='translateY(14px)';
+  el.classList.add('on');
+  E.actual=id;
+  window.scrollTo(0,0);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{
+    el.style.opacity='1';el.style.transform='translateY(0)';
+    setTimeout(()=>E.bloqueado=false,350);
+  }));
+  actualizarBarra();
+}
+
+// Barra de progreso narrativa
+const ORDEN = ['scr-inicio','scr-camino','scr-palabra','scr-dilema','scr-oscuro','scr-grieta','scr-revelacion','scr-silencio','scr-regreso','scr-derramamiento','scr-mision-eleccion','scr-mision','scr-enviado'];
+function actualizarBarra(){
+  const idx = ORDEN.indexOf(E.actual);
+  const pct = idx<0 ? 0 : Math.round((idx/(ORDEN.length-1))*100);
+  document.getElementById('barra-fill').style.width = pct+'%';
+}
+
+// ─── MENÚ ─────────────────────────────────────────────
+function navMenu(tab){
+  document.querySelectorAll('.mn').forEach(m=>m.classList.remove('act'));
+  document.getElementById('mn-'+tab)?.classList.add('act');
+  if(tab==='inicio'){
+    actualizarHub();
+    irA('scr-hub',true);
+  } else if(tab==='camino'){
+    irA('scr-camino',true);
+  } else if(tab==='mision'){
+    if(E.regresos>0) irA('scr-mision-eleccion',true);
+    else irA('scr-camino',true);
+  } else if(tab==='perfil'){
+    actualizarPerfil();
+    irA('scr-perfil',true);
   }
+}
 
-  const CAMINOS = {
-    cansado: {
-      txt: 'Llegas cargado.<br>No te pedimos que corras.<br><em>Solo que te sientes.</em>',
-      ver: 'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.',
-      ref: 'Mateo 11:28',
-      prof_txt: 'Algo dentro de ti sigue corriendo.<br><br>¿De qué huyes?',
-      prof_btns: [
-        { txt: 'Del silencio', sig: 'cons_silencio' },
-        { txt: 'De mí mismo', sig: 'cons_yo' },
-        { txt: 'De algo que pasó', sig: 'cons_pasado' },
-        { txt: 'No huyo. Estoy agotado.', sig: 'cons_agotado' },
-      ]
-    },
-    dudas: {
-      txt: 'Las dudas no te hacen débil.<br><em>Te hacen honesto.</em>',
-      ver: 'No seas incrédulo, sino creyente.',
-      ref: 'Juan 20:27',
-      prof_txt: '¿Qué pasaría si lo que buscas<br><br><em>ya te estaba buscando a ti?</em>',
-      prof_btns: [
-        { txt: 'Eso no tiene sentido', sig: 'cons_no' },
-        { txt: 'Me gustaría que fuera verdad', sig: 'cons_si' },
-        { txt: 'Algo me dice que sí', sig: 'cons_si' },
-        { txt: 'No lo sé', sig: 'cons_no' },
-      ]
-    },
-    buscando: {
-      txt: 'Buscas.<br><em>Eso ya dice mucho.</em>',
-      ver: 'Me buscaréis y me hallaréis, cuando me busquéis de todo vuestro corazón.',
-      ref: 'Jeremías 29:13',
-      prof_txt: 'Si encontraras lo que buscas esta noche...<br><br><em>¿Estarías listo para recibirlo?</em>',
-      prof_btns: [
-        { txt: 'Sí, estoy listo', sig: 'cons_si' },
-        { txt: 'Tengo miedo de estarlo', sig: 'cons_miedo' },
-        { txt: 'No lo sé', sig: 'cons_no' },
-      ]
-    },
-    sinsaber: {
-      txt: 'No saber<br><em>también es una puerta.</em>',
-      ver: 'Señor, tú me has examinado y conocido. Sabes cuándo me siento y cuándo me levanto.',
-      ref: 'Salmo 139:1',
-      prof_txt: 'Algo te trajo hasta aquí sin que lo planeases.<br><br><em>¿Y si eso no fue casualidad?</em>',
-      prof_btns: [
-        { txt: 'Puede ser coincidencia', sig: 'cons_no' },
-        { txt: 'Nunca lo había pensado', sig: 'cons_si' },
-        { txt: 'Yo tampoco lo entiendo', sig: 'cons_si' },
-      ]
-    },
-  };
-
-  const CONSECUENCIAS = {
-    cons_silencio: { txt: 'El silencio te asusta.<br><br>Porque en el silencio<br><em>algo podría hablarte.</em>', ver: 'Estad quietos, y conoced que yo soy Dios.', ref: 'Salmo 46:10' },
-    cons_yo:       { txt: 'Huyes de ti mismo.<br><br>Pero <em>tú mismo</em><br>es exactamente lo que el Padre quiere encontrar.', ver: 'Cercano está el Señor a los quebrantados de corazón.', ref: 'Salmo 34:18' },
-    cons_pasado:   { txt: 'Hay algo detrás de ti que sientes que te define.<br><br><em>Pero tú no eres lo que pasó.</em>', ver: 'Cuando pases por las aguas, yo estaré contigo. Los ríos no te anegarán.', ref: 'Isaías 43:2' },
-    cons_agotado:  { txt: 'Llegas vacío.<br><br><em>Bien.</em><br>Los vasos vacíos son los únicos que se pueden llenar.', ver: 'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.', ref: 'Mateo 11:28' },
-    cons_si:       { txt: 'Algo en ti lo sabe.<br><br>Antes de que tu mente<br><em>tuviera palabras para decirlo.</em>', ver: 'Antes de formarte en el vientre te conocí.', ref: 'Jeremías 1:5' },
-    cons_no:       { txt: 'No entender no es un obstáculo.<br><br><em>Es el punto de partida.</em>', ver: 'Fíate del Señor de todo tu corazón, y no te apoyes en tu propia prudencia.', ref: 'Proverbios 3:5' },
-    cons_miedo:    { txt: 'El miedo que sientes no es debilidad.<br><br><em>Es la puerta temblando antes de abrirse.</em>', ver: 'No temas, porque yo estoy contigo. No desmayes, porque yo soy tu Dios.', ref: 'Isaías 41:10' },
-  };
-
-  const MISIONES = {
-    si: {
-      intro: 'Hay alguien en tu mente ahora mismo.<br><br><em>No es casualidad.</em>',
-      txt: 'Hoy, antes de dormir,<br><em>piensa en esa persona.</em><br><br>No para cambiarla.<br>Para llevarla delante del Padre.',
-      ver: 'El que gana almas es sabio.',
-      ref: 'Proverbios 11:30'
-    },
-    varios: {
-      intro: 'Varios.<br><br>El Padre te dio ojos<br><em>para ver a los perdidos.</em>',
-      txt: 'Uno a uno.<br><em>No en masa.</em><br><br>El Padre fue a buscar la oveja perdida.<br>No al rebaño.',
-      ver: 'La oveja perdida la pone sobre sus hombros gozoso.',
-      ref: 'Lucas 15:5'
-    },
-    yo: {
-      intro: 'Todavía tú.<br><br><em>Está bien.</em><br>El Padre sigue trabajando.',
-      txt: 'Sigue viniendo.<br><em>Cada vez que vuelvas</em><br>estás siendo preparado<br>para cuando llegue tu momento.',
-      ver: 'El que comenzó en vosotros la buena obra, la perfeccionará.',
-      ref: 'Filipenses 1:6'
-    }
-  };
-
-  function elegirCamino(c) {
-    estado.camino = c;
-    estado.puntos += 2;
-    const d = CAMINOS[c];
-    document.getElementById('txt-palabra').innerHTML = d.txt;
-    document.getElementById('txt-versiculo').textContent = d.ver;
-    document.getElementById('txt-referencia').textContent = d.ref;
-    document.getElementById('btn-palabra').innerHTML = '<button class="btn dorado" onclick="mostrarProfundidad()">Seguir →</button>';
-    irA('p-palabra');
-  }
-
-  function mostrarProfundidad() {
-    const d = CAMINOS[estado.camino];
-    document.getElementById('txt-profundidad').innerHTML = d.prof_txt;
-    let btns = '';
-    d.prof_btns.forEach(b => {
-      btns += `<button class="btn" onclick="mostrarConsecuencia('${b.sig}')">${b.txt}</button>`;
-    });
-    document.getElementById('btn-profundidad').innerHTML = btns;
-    irA('p-profundidad');
-  }
-
-  function mostrarConsecuencia(clave) {
-    estado.puntos += 2;
-    if (!estado.inventario.includes('🔑')) estado.inventario.push('🔑');
-    const c = CONSECUENCIAS[clave];
-    document.getElementById('txt-consecuencia').innerHTML = c.txt;
-    document.getElementById('txt-cons-ver').textContent = c.ver;
-    document.getElementById('txt-cons-ref').textContent = c.ref;
-    document.getElementById('btn-consecuencia').innerHTML = '<button class="btn dorado" onclick="mostrarDilema()">Seguir →</button>';
-    irA('p-consecuencia');
-  }
-
-  function mostrarDilema() {
-    const c = estado.camino;
-    let txt = '', btns = '';
-    if (c === 'cansado') {
-      txt = 'Hay una decisión delante de ti.<br><br>Ser honesto con alguien y perder algo que aprecias.<br><br>O callar y conservarlo.<br><br><em>¿Qué haces?</em>';
-      btns = `<button class="btn dorado" onclick="irOscuro(true)">Soy honesto aunque duela</button><button class="btn" onclick="irOscuro(false)">Callo. No es el momento</button><button class="btn" onclick="irOscuro(false)">No sé qué haría</button>`;
-    } else if (c === 'dudas') {
-      txt = 'Si pudieras eliminar todas tus dudas ahora mismo...<br><br><em>¿Las eliminarías?</em>';
-      btns = `<button class="btn dorado" onclick="irOscuro(true)">Sí, sin dudar</button><button class="btn" onclick="irOscuro(false)">No estoy seguro</button><button class="btn" onclick="irOscuro(true)">No. Las dudas me hacen humano</button>`;
-    } else if (c === 'buscando') {
-      txt = 'Lo que buscas...<br><br><em>¿Estás dispuesto a cambiar</em><br>para poder recibirlo?';
-      btns = `<button class="btn dorado" onclick="irOscuro(true)">Sí, lo que haga falta</button><button class="btn" onclick="irOscuro(false)">No sé si puedo cambiar</button><button class="btn" onclick="irOscuro(false)">Tengo miedo de lo que implica</button>`;
-    } else {
-      txt = 'Estás aquí sin saber por qué.<br><br>Pero si hubiera una razón...<br><br><em>¿Querrías saberla?</em>';
-      btns = `<button class="btn dorado" onclick="irOscuro(true)">Sí, quiero saber</button><button class="btn" onclick="irOscuro(false)">No sé si estoy listo</button><button class="btn" onclick="irOscuro(true)">Depende de la razón</button>`;
-    }
-    document.getElementById('txt-dilema').innerHTML = txt;
-    document.getElementById('btn-dilema').innerHTML = btns;
-    irA('p-dilema');
-  }
-
-  function irOscuro(profundo) {
-    estado.discernidos++; estado.puntos += 3;
-    if (!estado.inventario.includes('🛡')) estado.inventario.push('🛡');
-    if (tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
-    let btns = profundo
-      ? '<button class="btn dorado" onclick="irA(\'p-grieta\')">Esa voz miente</button><button class="btn" onclick="irA(\'p-grieta\')">... lo sé pero duele</button>'
-      : '<button class="btn" onclick="irA(\'p-grieta\')">Sigo de todas formas</button><button class="btn" onclick="irA(\'p-grieta\')">No puedo ignorarla</button>';
-    document.getElementById('btn-oscuro').innerHTML = btns;
-    irA('p-oscuro');
-  }
-
-  function abrirme() {
-    estado.escuchas++;
-    if (!estado.inventario.includes('🌬')) estado.inventario.push('🌬');
-    irA('p-silencio-final');
-  }
-
-  const PALABRAS_REGRESO = [
-    { v: 'Yo he venido para que tengan vida, y para que la tengan en abundancia.', r: 'Juan 10:10' },
-    { v: 'Cuando aún estaba lejos, su padre lo vio y se compadeció. Corrió y lo abrazó.', r: 'Lucas 15:20' },
-    { v: 'Hay más gozo en el cielo por un pecador que se arrepiente.', r: 'Lucas 15:7' },
-    { v: 'Bien, buen siervo y fiel. Sobre mucho te pondré.', r: 'Mateo 25:21' },
-    { v: 'La paz os dejo, mi paz os doy. No se turbe vuestro corazón.', r: 'Juan 14:27' },
-    { v: 'El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente.', r: 'Salmo 91:1' },
+function actualizarHub(){
+  const saludos = [
+    `Bienvenido, <em>${E.nombre}</em>.`,
+    `Has vuelto, <em>${E.nombre}</em>.`,
+    `El Padre te espera, <em>${E.nombre}</em>.`
   ];
+  document.getElementById('hub-saludo').innerHTML = saludos[Math.min(E.regresos, saludos.length-1)];
+}
 
-  function irRegreso() {
-    estado.regresos++; estado.puntos += 6;
-    if (!estado.inventario.includes('🔥')) estado.inventario.push('🔥');
-    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-    const idx = Math.min(estado.regresos - 1, PALABRAS_REGRESO.length - 1);
-    document.getElementById('txt-regreso').textContent = PALABRAS_REGRESO[idx].v;
-    document.getElementById('ref-regreso').textContent = PALABRAS_REGRESO[idx].r;
-    irA('p-regreso');
-  }
+function iniciarCamino(){
+  navMenu('camino');
+}
 
-  function elegirMision(tipo) {
-    estado.mision = tipo; estado.puntos += 5;
-    const m = MISIONES[tipo];
-    document.getElementById('txt-mision-intro').innerHTML = m.intro;
-    document.getElementById('txt-mision').innerHTML = m.txt;
-    document.getElementById('txt-mision-ver').textContent = m.ver;
-    document.getElementById('txt-mision-ref').textContent = m.ref;
-    irA('p-mision');
-  }
+// ─── INICIO — tap en el orbe ─────────────────────────
+function tapInicio(){
+  const o = document.getElementById('orb-inicio');
+  o.classList.add('tap');
+  setTimeout(()=>o.classList.remove('tap'),300);
+  if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+}
 
-  function irEnviado() {
-    estado.enviados++; estado.puntos += 10;
-    if (!estado.inventario.includes('🔥')) estado.inventario.push('🔥');
-    if (!estado.inventario.includes('💛')) estado.inventario.push('💛');
-    if (tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
-    irA('p-enviado');
-  }
+function entrar(motivo){
+  E.ultimo = motivo;
+  irA('scr-camino');
+}
 
-  function mostrarPerfil() {
-    const niveles = [[0,'🌑 Buscador'],[10,'🌱 Caminante'],[25,'🛡 Guardián'],[50,'⚡ Anciano'],[80,'🔥 Profeta'],[120,'💛 Enviado']];
-    let nv = '🌑 Buscador';
-    for (const [min, label] of niveles) { if (estado.puntos >= min) nv = label; }
-    document.getElementById('perfil-nombre').textContent = estado.nombre;
-    document.getElementById('perfil-nivel').textContent = nv;
-    document.getElementById('p-puntos').textContent = estado.puntos + ' pts';
-    document.getElementById('p-regresos').textContent = estado.regresos;
-    document.getElementById('p-escuchas').textContent = estado.escuchas;
-    document.getElementById('p-discernidos').textContent = estado.discernidos;
-    document.getElementById('p-enviados').textContent = estado.enviados;
-    document.getElementById('p-inventario').textContent = estado.inventario.join('  ') || '—';
-    irA('p-perfil');
+// ─── CAMINOS ──────────────────────────────────────────
+const CAMINOS = {
+  cansado:{
+    orb:'😮‍💨',
+    txt:'Llegas cargado.<br>No te pedimos que corras.<br><em>Solo que te sientes.</em>',
+    ver:'Venid a mí todos los que estáis trabajados y cargados, y yo os haré descansar.',
+    ref:'Mateo 11:28',
+    dilema:'¿De qué huyes?',
+    opciones:[
+      {t:'Del silencio',v:true},{t:'De mí mismo',v:true},
+      {t:'De algo que pasó',v:false},{t:'No huyo. Estoy agotado.',v:false}
+    ]
+  },
+  dudas:{
+    orb:'❓',
+    txt:'Las dudas no te hacen débil.<br><em>Te hacen honesto.</em>',
+    ver:'No seas incrédulo, sino creyente.',
+    ref:'Juan 20:27',
+    dilema:'¿Y si lo que buscas ya te buscaba a ti?',
+    opciones:[
+      {t:'Imposible',v:false},{t:'Me gustaría que fuera verdad',v:true},
+      {t:'Algo me dice que sí',v:true},{t:'No lo sé',v:false}
+    ]
+  },
+  buscando:{
+    orb:'🔍',
+    txt:'Buscas.<br><em>Eso ya dice mucho.</em>',
+    ver:'Me buscaréis y me hallaréis, cuando me busquéis de todo corazón.',
+    ref:'Jeremías 29:13',
+    dilema:'Si encontraras lo que buscas esta noche,<br>¿estarías listo para recibirlo?',
+    opciones:[
+      {t:'Sí, estoy listo',v:true},{t:'Tengo miedo de estarlo',v:true},
+      {t:'No lo sé',v:false}
+    ]
+  },
+  sinsaber:{
+    orb:'🌫️',
+    txt:'No saber<br><em>también es una puerta.</em>',
+    ver:'Señor, tú me has examinado y conocido.',
+    ref:'Salmo 139:1',
+    dilema:'¿Y si esto no fue casualidad?',
+    opciones:[
+      {t:'Puede ser coincidencia',v:false},{t:'Nunca lo había pensado',v:true},
+      {t:'Yo tampoco lo entiendo',v:true}
+    ]
   }
+};
+
+function elegirCamino(c){
+  E.camino=c; E.puntos+=2;
+  const d=CAMINOS[c];
+  document.getElementById('orb-palabra').textContent=d.orb;
+  document.getElementById('txt-palabra').innerHTML=d.txt;
+  document.getElementById('txt-ver').textContent=d.ver;
+  document.getElementById('txt-ref').textContent=d.ref;
+  // Preparar dilema
+  document.getElementById('txt-dilema').innerHTML=d.dilema;
+  let btns='';
+  d.opciones.forEach(o=>{
+    btns+=`<button class="btn${o.v?' oro':''}" onclick="responderDilema(${o.v})">${o.t}</button>`;
+  });
+  document.getElementById('btns-dilema').innerHTML=btns;
+  irA('scr-palabra');
+}
+
+function responderDilema(profundo){
+  E.puntos+=3;
+  if(!E.inventario.includes('🔑')) E.inventario.push('🔑');
+  if(tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+  const btns = profundo
+    ? '<button class="btn oro" onclick="irA(\'scr-grieta\')">Esa voz miente</button><button class="btn" onclick="irA(\'scr-grieta\')">Lo sé... pero duele</button>'
+    : '<button class="btn" onclick="irA(\'scr-grieta\')">Sigo de todas formas</button><button class="btn rojo" onclick="irA(\'scr-grieta\')">No puedo ignorarla</button>';
+  document.getElementById('btns-oscuro').innerHTML=btns;
+  irA('scr-oscuro');
+}
+
+// ─── ABRIRME ──────────────────────────────────────────
+function abrirme(){
+  E.escuchas++;
+  if(!E.inventario.includes('🌬️')) E.inventario.push('🌬️');
+  if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  irA('scr-silencio');
+}
+
+// ─── REGRESO ──────────────────────────────────────────
+const VERSICULOS_REGRESO=[
+  {v:'Yo he venido para que tengan vida en abundancia.',r:'Juan 10:10'},
+  {v:'Cuando aún estaba lejos, su padre lo vio y corrió a abrazarlo.',r:'Lucas 15:20'},
+  {v:'La paz os dejo, mi paz os doy.',r:'Juan 14:27'},
+  {v:'El que habita al abrigo del Altísimo morará bajo Su sombra.',r:'Salmo 91:1'},
+];
+function irRegreso(){
+  E.regresos++; E.puntos+=6;
+  if(!E.inventario.includes('🏠')) E.inventario.push('🏠');
+  if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  const v=VERSICULOS_REGRESO[Math.min(E.regresos-1,VERSICULOS_REGRESO.length-1)];
+  document.getElementById('txt-regreso').textContent=v.v;
+  document.getElementById('ref-regreso').textContent=v.r;
+  document.getElementById('mn-camino').querySelector('.ico').textContent='🌱';
+  irA('scr-regreso');
+}
+
+// ─── MISIONES ─────────────────────────────────────────
+const MISIONES={
+  si:{txt:'Hoy, antes de dormir,<br><em>piensa en esa persona.</em><br><br>No para cambiarla.<br>Para llevarla delante del Padre.',ver:'El que gana almas es sabio.',ref:'Proverbios 11:30'},
+  varios:{txt:'Uno a uno.<br><em>No en masa.</em><br><br>El Padre fue a buscar la oveja perdida.<br>No al rebaño.',ver:'La oveja perdida la pone sobre sus hombros gozoso.',ref:'Lucas 15:5'},
+  yo:{txt:'Sigue viniendo.<br><em>Cada vez que vuelvas</em><br>estás siendo preparado<br>para cuando llegue tu momento.',ver:'El que comenzó en vosotros la buena obra, la perfeccionará.',ref:'Filipenses 1:6'}
+};
+function elegirMision(tipo){
+  E.puntos+=5;
+  const m=MISIONES[tipo];
+  document.getElementById('txt-mision').innerHTML=m.txt;
+  document.getElementById('txt-mision-ver').textContent=m.ver;
+  document.getElementById('txt-mision-ref').textContent=m.ref;
+  irA('scr-mision');
+}
+function irEnviado(){
+  E.enviados++; E.puntos+=10;
+  if(!E.inventario.includes('🔥')) E.inventario.push('🔥');
+  if(!E.inventario.includes('💛')) E.inventario.push('💛');
+  if(tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('success');
+  document.getElementById('mn-mision').querySelector('.ico').textContent='💛';
+  irA('scr-enviado');
+}
+
+// ─── PERFIL ───────────────────────────────────────────
+const NIVELES=[
+  [0,'🌑','Buscador'],[10,'🌱','Caminante'],[25,'🛡️','Guardián'],
+  [50,'⚡','Anciano'],[80,'🔥','Profeta'],[120,'💛','Enviado']
+];
+function actualizarPerfil(){
+  let ico='🌑',lbl='Buscador',nextMin=10;
+  for(let i=0;i<NIVELES.length;i++){
+    if(E.puntos>=NIVELES[i][0]){ico=NIVELES[i][1];lbl=NIVELES[i][2];}
+    if(E.puntos<NIVELES[i][0]&&i>0){nextMin=NIVELES[i][0];break;}
+  }
+  const prev=NIVELES.find(n=>E.puntos>=n[0]&&NIVELES[NIVELES.indexOf(n)+1]?.[0]>E.puntos);
+  const prevMin=prev?prev[0]:0;
+  const xpPct=Math.min(100,Math.round(((E.puntos-prevMin)/(nextMin-prevMin||1))*100));
+
+  document.getElementById('avatar-emoji').textContent=ico;
+  document.getElementById('prf-nombre').textContent=E.nombre;
+  document.getElementById('prf-nivel').textContent=lbl;
+  document.getElementById('prf-puntos').textContent=E.puntos;
+  document.getElementById('prf-regresos').textContent=E.regresos;
+  document.getElementById('prf-escuchas').textContent=E.escuchas;
+  document.getElementById('prf-enviados').textContent=E.enviados;
+  document.getElementById('prf-xp').style.width=xpPct+'%';
+  document.getElementById('prf-inventario').textContent=E.inventario.join(' ')||'—';
+}
+
+// ─── RIPPLE ───────────────────────────────────────────
+document.addEventListener('click',e=>{
+  const btn=e.target.closest('.btn');
+  if(!btn) return;
+  const r=document.createElement('span');
+  r.className='ripple';
+  const rect=btn.getBoundingClientRect();
+  const size=Math.max(rect.width,rect.height)*1.5;
+  r.style.cssText=`width:${size}px;height:${size}px;top:${e.clientY-rect.top-size/2}px;left:${e.clientX-rect.left-size/2}px;`;
+  btn.appendChild(r);
+  setTimeout(()=>r.remove(),500);
+});
+
+// ─── INIT ─────────────────────────────────────────────
+actualizarBarra();
 </script>
 </body>
 </html>
