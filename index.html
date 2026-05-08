@@ -19,12 +19,29 @@
       overflow: hidden;
       position: relative;
     }
+    .bg-global {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 0;
+      transition: background-image 0.8s ease;
+    }
+    .bg-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.62);
+      z-index: 1;
+    }
     .particulas {
       position: fixed;
       top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none;
-      z-index: 0;
+      z-index: 2;
     }
     .particula {
       position: absolute;
@@ -117,7 +134,7 @@
       max-width: 300px;
     }
     .btn {
-      background: transparent;
+      background: rgba(0,0,0,0.5);
       border: 1px solid rgba(201,168,76,0.4);
       color: #e8dcc0;
       padding: 16px 24px;
@@ -129,9 +146,10 @@
       transition: all 0.3s ease;
       position: relative;
       overflow: hidden;
+      backdrop-filter: blur(4px);
     }
     .btn:hover, .btn:active {
-      background: rgba(201,168,76,0.1);
+      background: rgba(201,168,76,0.15);
       border-color: rgba(201,168,76,0.9);
       color: #c9a84c;
     }
@@ -147,9 +165,10 @@
     }
     .btn:active::after { width: 300px; height: 300px; }
     .btn.dorado {
-      background: rgba(201,168,76,0.15);
+      background: rgba(201,168,76,0.2);
       border-color: #c9a84c;
       color: #c9a84c;
+      backdrop-filter: blur(4px);
     }
     .linea {
       width: 40px; height: 1px;
@@ -168,13 +187,14 @@
       50% { opacity: 1; }
     }
     .perfil-card {
-      background: rgba(201,168,76,0.05);
+      background: rgba(0,0,0,0.6);
       border: 1px solid rgba(201,168,76,0.2);
       border-radius: 4px;
       padding: 24px;
       width: 100%;
       max-width: 300px;
       margin-bottom: 30px;
+      backdrop-filter: blur(8px);
     }
     .perfil-nombre { font-size: 20px; color: #c9a84c; margin-bottom: 6px; }
     .perfil-nivel {
@@ -193,6 +213,9 @@
 </head>
 <body>
 
+<!-- Fondo dinámico -->
+<div class="bg-global" id="bg-global"></div>
+<div class="bg-overlay"></div>
 <div class="particulas" id="particulas"></div>
 
 <!-- P1: ENTRADA -->
@@ -380,7 +403,7 @@
   </div>
   <div class="referencia" style="margin-top:0;">Sofonías 3:17</div>
   <div class="botones" style="margin-top:40px;">
-    <button class="btn dorado" onclick="irA('p-regreso')">· · ·</button>
+    <button class="btn dorado" onclick="irRegreso()">· · ·</button>
   </div>
 </div>
 
@@ -422,6 +445,33 @@
   tg.setHeaderColor && tg.setHeaderColor('#000000');
   tg.setBackgroundColor && tg.setBackgroundColor('#000000');
 
+  // Mapa de fondos por pantalla
+  const FONDOS = {
+    'p-inicio':         "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
+    'p-espejo':         "juego YHWH/Gemini_Generated_Image_xkwokzxkwokzxkwo.png",
+    'p-camino':         "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
+    'p-palabra':        "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
+    'p-profundidad':    "juego YHWH/Gemini_Generated_Image_3cqrs33cqrs33cqr.png",
+    'p-consecuencia':   "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
+    'p-dilema':         "juego YHWH/Gemini_Generated_Image_bzdea7bzdea7bzde.png",
+    'p-oscuro':         "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
+    'p-grieta':         "juego YHWH/Gemini_Generated_Image_tcqacdtcqacdtcqa.png",
+    'p-revelacion':     "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
+    'p-noentiendo':     "juego YHWH/Gemini_Generated_Image_5wrqmn5wrqmn5wrq.png",
+    'p-escucha':        "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
+    'p-miedo':          "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
+    'p-esperar':        "juego YHWH/Gemini_Generated_Image_q06ltlq06ltlq06l.png",
+    'p-silencio-final': "juego YHWH/Gemini_Generated_Image_6nobgd6nobgd6nob.png",
+    'p-regreso':        "juego YHWH/Gemini_Generated_Image_f7wu03f7wu03f7wu.png",
+    'p-perfil':         "juego YHWH/Gemini_Generated_Image_ou0xldou0xldou0x.png",
+  };
+
+  function cambiarFondo(id) {
+    const bg = document.getElementById('bg-global');
+    const img = FONDOS[id];
+    if (img) bg.style.backgroundImage = `url('${img}')`;
+  }
+
   const estado = {
     camino: '',
     puntos: 0,
@@ -444,6 +494,9 @@
     cont.appendChild(p);
   }
 
+  // Fondo inicial
+  cambiarFondo('p-inicio');
+
   // Navegación
   function irA(id, dato) {
     const actual = document.querySelector('.pantalla.visible');
@@ -452,7 +505,11 @@
       setTimeout(() => {
         actual.classList.remove('visible', 'saliendo');
         const sig = document.getElementById(id);
-        if (sig) { sig.classList.add('visible'); window.scrollTo(0,0); }
+        if (sig) {
+          sig.classList.add('visible');
+          cambiarFondo(id);
+          window.scrollTo(0,0);
+        }
       }, 400);
     }
     if (dato) estado.ultimo = dato;
@@ -616,8 +673,7 @@
     { v: 'El que habita al abrigo del Altísimo morará bajo la sombra del Omnipotente.', r: 'Salmo 91:1' },
   ];
 
-  // Override llegada a p-regreso
-  document.getElementById('p-silencio-final').querySelector('button').onclick = function() {
+  function irRegreso() {
     estado.regresos++;
     estado.puntos += 6;
     if (!estado.inventario.includes('🔥')) estado.inventario.push('🔥');
@@ -626,7 +682,7 @@
     document.getElementById('txt-regreso').textContent = PALABRAS_REGRESO[idx].v;
     document.getElementById('ref-regreso').textContent = PALABRAS_REGRESO[idx].r;
     irA('p-regreso');
-  };
+  }
 
   function mostrarPerfil() {
     const niveles = [[0,'🌑 Buscador'],[10,'🌱 Caminante'],[25,'🛡 Guardián'],[50,'⚡ Anciano'],[80,'🔥 Profeta']];
